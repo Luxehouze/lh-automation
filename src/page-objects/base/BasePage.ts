@@ -1,0 +1,147 @@
+import { Page, Locator } from "@playwright/test";
+import { pageFixture } from "../../step-definitions/hooks/browserContextFixture";
+
+//Load env variables from .env file
+import { config as loadEnv } from "dotenv"
+import { time } from "console";
+import { TIMEOUT } from "dns";
+const env = loadEnv({ path: './env/.env', override: true });
+
+//Create a configuration object for easy access to env variables
+const config = {
+    width: parseInt(env.parsed?.BROWSER_WIDTH || '1920'),
+    height: parseInt(env.parsed?.BROWSER_HEIGHT || '1080'),
+}
+
+export class BasePage {
+
+    get page(): Page {
+        return pageFixture.page;
+    }
+
+    get newsLetterPopup() { return this.page.getByText(/Never Miss An Update/i); }
+    get closeNewsletterBtn() { return this.page.locator('[data-testid="newsletter-modal-close-button"]').nth(1); }
+    get sortDropdown() { return this.page.getByText('Sort by'); }
+    get sortHighToLow() { return this.page.getByText('Price: High to Low'); }
+    get sortLowToHigh() { return this.page.getByText('Price: Low to High'); }
+    get sortAtoZ() { return this.page.getByText('Alphabetical, A - Z'); }
+    get sortZtoA() { return this.page.getByText('Alphabetical, Z - A'); }
+    get sortLatest() { return this.page.getByText('Latest'); }
+
+    public async closeNewsletterPopupIfVisible(): Promise<void> {
+    if (this.page.url() === "about:blank") {
+    return;
+  }
+
+  // beri sedikit waktu popup muncul (tapi jangan sampai 30 detik)
+  await this.page.waitForTimeout(1500);
+
+  const titleLocator = this.newsLetterPopup;
+
+  // cek cepat: ada berapa elemen judul popup di DOM?
+  const count = await titleLocator.count().catch(() => 0);
+  console.log("Newsletter title count =", count);
+
+  if (count === 0) {
+    console.log("Newsletter popup is not present.");
+    return; // jangan pakai waitFor lagi, cukup keluar
+  }
+
+  // ambil elemen pertama dan cek visible
+  const title = titleLocator.first();
+  const visible = await title.isVisible().catch(() => false);
+
+  if (!visible) {
+    console.log("Newsletter popup element is in DOM but not visible.");
+    return;
+  }
+
+  console.log("Newsletter popup is visible. Closing it...");
+
+  await this.page.waitForSelector('[data-testid="newsletter-modal-close-button"]', {
+      state: 'attached',
+      timeout: 12000
+    });
+  const closeBtn = this.closeNewsletterBtn;
+
+  if (await closeBtn.isVisible().catch((
+  ) => false)) {
+    await closeBtn.click({ force: true });
+    // optional: tunggu sedikit
+    await this.page.waitForTimeout(500);
+  } else {
+    console.log("Close button not found, trying Escape key...");
+    await this.page.keyboard.press("Escape");
+    await this.page.waitForTimeout(500);
+  }
+}
+
+    //Promise<void> in TypeScript when you’re defining an async function that doesn’t explicitly return a value.
+    public async navigate(url: string): Promise<void> {
+        await this.page.goto(url, { waitUntil: 'domcontentloaded' });
+        console.log('Page is:', this.page);
+    }
+
+    public async waitAndClickByRole(role: string, name: string): Promise<void> {
+        const element = await this.page.getByRole(role as any, { name: name });
+        await element.click();
+    }
+
+    // Wait for the locator to be visible and then click on it
+    public async waitAndClick(locator: Locator): Promise<void> {
+        await locator.isVisible();
+        await locator.click();
+    }
+
+    // Wait for the selector to be visible and then click on it
+    public async switchToNewTab(link: Locator): Promise<void> {
+    console.log("Clicked link, waiting for new tab...");
+
+    // Tunggu tab baru sambil klik link
+    const [newPage] = await Promise.all([
+        this.page.context().waitForEvent('page'),
+        link.click(),
+        // this.page.click(locator),
+    ]);
+
+    // Tunggu semua resource tab baru dimuat
+    await newPage.waitForLoadState('domcontentloaded');
+
+    // Update pageFixture agar this.page mengarah ke tab baru
+    pageFixture.page = newPage;
+    
+        //Bring the newly assigned tab to the front (Make it active)
+        await this.page.bringToFront();
+    
+        //Ensure the newly assigned tab is also fully maximised 
+        await this.page.setViewportSize({ width: config.width, height: config.height });
+        console.log("Switched to new tab");
+    } 
+
+    public async zoomOut() {
+        await this.page.waitForSelector("body", { state: "attached", timeout: 30000 });
+        await this.page.evaluate(() => {
+        document.body.style.zoom = "0.5"; // 50% zoom out
+        });
+    }
+
+    public async clickSort(): Promise<void> {
+        await this.sortDropdown.click();
+    }
+    public async clickSortHighToLow(): Promise<void> {
+        await this.sortHighToLow.click();
+    }
+    public async clickSortLowToHigh(): Promise<void> {
+        await this.sortLowToHigh.click();
+    }
+    public async clickSortAtoZ(): Promise<void> {
+        await this.sortAtoZ.click();
+    }
+    public async clickSortZtoA(): Promise<void> {
+        await this.sortZtoA.click();
+    }
+
+    public async clickSortLatest(): Promise<void> {
+        await this.sortLatest.click();
+    }
+}

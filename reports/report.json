@@ -1,0 +1,214 @@
+[
+  {
+    "description": "",
+    "elements": [
+      {
+        "description": "",
+        "id": "luxehouze-beauty;verify-price-in-product-detail-page-from-beauty-page",
+        "keyword": "Scenario",
+        "line": 8,
+        "name": "Verify price in product detail page from beauty page",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 3898496750
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 5,
+            "name": "user navigate to the Luxehouze beauty page",
+            "match": {
+              "location": "src/step-definitions/Beauty_Steps.ts:7"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2858574125
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 9,
+            "name": "user click Charlotte Tilbury in beauty page",
+            "match": {
+              "location": "src/step-definitions/Beauty_Steps.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3213676541
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 10,
+            "name": "user select the first suggestion Charlotte Tilbury",
+            "match": {
+              "location": "src/step-definitions/Beauty_Steps.ts:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 10896310666
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 11,
+            "name": "user should verify price in product detail page of Charlotte Tilbury",
+            "match": {
+              "location": "src/step-definitions/Beauty_Steps.ts:32"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 930335290
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 476634750
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@regression",
+            "line": 1
+          },
+          {
+            "name": "@beauty",
+            "line": 1
+          },
+          {
+            "name": "@beauty-price",
+            "line": 7
+          },
+          {
+            "name": "@beauty-collection",
+            "line": 7
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "luxehouze-beauty;verify-filter-beauty",
+        "keyword": "Scenario",
+        "line": 14,
+        "name": "Verify filter beauty",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 3013379915
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 5,
+            "name": "user navigate to the Luxehouze beauty page",
+            "match": {
+              "location": "src/step-definitions/Beauty_Steps.ts:7"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2235909790
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 15,
+            "name": "user click category makeup in beauty page",
+            "match": {
+              "location": "src/step-definitions/Beauty_Steps.ts:37"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6240964250
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "user select filter beauty",
+            "match": {
+              "location": "src/step-definitions/Beauty_Steps.ts:43"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 15656327874
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 17,
+            "name": "user should verify result filter beauty in product detail page of makeup",
+            "match": {
+              "location": "src/step-definitions/Beauty_Steps.ts:50"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 10178310457
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 490588959
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@regression",
+            "line": 1
+          },
+          {
+            "name": "@beauty",
+            "line": 1
+          },
+          {
+            "name": "@beauty-filter",
+            "line": 13
+          },
+          {
+            "name": "@beauty-label",
+            "line": 13
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "id": "luxehouze-beauty",
+    "line": 2,
+    "keyword": "Feature",
+    "name": "Luxehouze beauty",
+    "tags": [
+      {
+        "name": "@regression",
+        "line": 1
+      },
+      {
+        "name": "@beauty",
+        "line": 1
+      }
+    ],
+    "uri": "src/features/Beauty.feature"
+  }
+]
