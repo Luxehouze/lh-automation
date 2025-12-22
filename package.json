@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "test": "npx playwright test",
     "cucumber": "npx cucumber-js && ts-node ./src/index.ts",
     "cucumberByPass": "npx cucumber-js 'src/features/**/*.feature' --require-module ts-node/register --require 'src/step-definitions/hooks/**/*.ts' --require 'src/step-definitions/**/*.ts' --format progress --format summary",
     "test:all": "./run-all.sh",
