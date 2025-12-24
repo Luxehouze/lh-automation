@@ -7,9 +7,20 @@ const reportDir = path.join(__dirname, 'reports');
 function getStatus(reportPath) {
   try {
     const data = JSON.parse(fs.readFileSync(reportPath, 'utf-8'));
-    const failed = data.filter(s => s.status === 'failed').length;
+
+    let failed = 0;
+
+    data.forEach(feature => {
+      (feature.elements || []).forEach(scenario => {
+        const hasFailedStep = (scenario.steps || []).some(
+          step => step.result?.status === 'failed'
+        );
+        if (hasFailedStep) failed++;
+      });
+    });
+
     return failed > 0 ? 'Failed' : 'Passed';
-  } catch {
+  } catch (e) {
     return 'Unknown';
   }
 }

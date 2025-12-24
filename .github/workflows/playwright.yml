@@ -6,7 +6,7 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
   schedule:
-    - cron: '0 2 * * *' # setiap hari jam 09:00 WIB
+    - cron: '0 2-13 * * *' # setiap hari jam 09:00 WIB
 jobs:
   test:
     timeout-minutes: 60
@@ -15,8 +15,10 @@ jobs:
       matrix:
         browser: [firefox]
     env:
+      BASE_URL: ${{ secrets.BASE_URL }}
       UI_AUTOMATION_BROWSER: ${{ matrix.browser }}
-      PARALLEL: 2
+      HEADLESS: true
+      PARALLEL: 1
       RETRY: 1
     steps:
     - uses: actions/checkout@v4
@@ -45,6 +47,36 @@ jobs:
         name: reports
         path: reports/
         retention-days: 30
+    - name: Parse cucumber report 
+      run: node scripts/parse-cucumber-report.js ${{ matrix.browser }}
+    - name: Notify Discord
+      env:
+        DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        BROWSER: ${{ matrix.browser }}
+      run: |
+        node -e "
+        const fs=require('fs');
+        const s=JSON.parse(fs.readFileSync('./reports/' + process.env.BROWSER + '/summary.json','utf8'));
+        const status = s.failed>0 ? '❌' : '✅';
+        const payload = {
+          username: 'QA Automation',
+          embeds: [{
+            title: status + ' Luxehouze Automation Result',
+            fields: [
+              { name: 'Browser', value: String(s.browser), inline: true },
+              { name: 'Passed', value: String(s.passed), inline: true },
+              { name: 'Failed', value: String(s.failed), inline: true },
+              { name: 'Skipped', value: String(s.skipped), inline: true },
+              { name: 'Total', value: String(s.total), inline: true }
+            ]
+          }]
+        };
+        console.log(JSON.stringify(payload));
+        " > discord_payload.json
+
+        curl -H "Content-Type: application/json" \
+          --data @discord_payload.json \
+          "$DISCORD_WEBHOOK_URL"
     - name: Download all reports
       uses: actions/download-artifact@v4
       with:
