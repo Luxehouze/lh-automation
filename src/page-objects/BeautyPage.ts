@@ -21,7 +21,7 @@ export class BeautyPage extends BasePage {
     }
 
     public async selectFirstProductCT(): Promise<void> {
-        await this.page.waitForTimeout(3000);
+        await this.page.waitForTimeout(6000);
         await this.firstProductCT.click();
     }
 
@@ -32,25 +32,25 @@ export class BeautyPage extends BasePage {
     }
 
     public async clickMakeup(): Promise<void> {
-        await this.page.waitForTimeout(3000);
+        await this.page.waitForTimeout(6000);
         await this.makeupBtn.scrollIntoViewIfNeeded();
         await this.makeupBtn.click();
     }
 
     public async selectFilterBeauty(): Promise<void> {
-        await this.page.waitForTimeout(3000);
+        await this.page.waitForTimeout(6000);
         await this.filterDior.scrollIntoViewIfNeeded();
         await this.filterDior.click();
-        await this.page.waitForTimeout(3000);
+        await this.page.waitForTimeout(6000);
         await this.filterHotRightNow.scrollIntoViewIfNeeded();
         await this.filterHotRightNow.click();
-        await this.page.waitForTimeout(3000);
+        await this.page.waitForTimeout(6000);
         await this.filterFace.scrollIntoViewIfNeeded();
         await this.filterFace.click();
     }
 
     public async clickResultFilterBeauty(): Promise<void> {
-        await this.page.waitForTimeout(2000);
+        await this.page.waitForTimeout(6000);
         await this.firstProductDior.scrollIntoViewIfNeeded();
         await this.firstProductDior.click();
     }
