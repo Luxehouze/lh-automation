@@ -4,69 +4,69 @@
     "elements": [
       {
         "description": "",
-        "id": "luxehouze-beauty;verify-price-in-product-detail-page-from-beauty-page",
+        "id": "luxehouze-watch;verify-price-in-product-detail-page-from-watch-page",
         "keyword": "Scenario",
         "line": 8,
-        "name": "Verify price in product detail page from beauty page",
+        "name": "Verify price in product detail page from watch page",
         "steps": [
           {
             "keyword": "Before",
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 3898496750
+              "duration": 2675596000
             }
           },
           {
             "arguments": [],
             "keyword": "Given ",
             "line": 5,
-            "name": "user navigate to the Luxehouze beauty page",
+            "name": "user navigate to the Luxehouze watch page",
             "match": {
-              "location": "src/step-definitions/Beauty_Steps.ts:7"
+              "location": "src/step-definitions/Watch_Steps.ts:7"
             },
             "result": {
               "status": "passed",
-              "duration": 2858574125
+              "duration": 3032721833
             }
           },
           {
             "arguments": [],
             "keyword": "When ",
             "line": 9,
-            "name": "user click Charlotte Tilbury in beauty page",
+            "name": "user click patek phillippe in watch page",
             "match": {
-              "location": "src/step-definitions/Beauty_Steps.ts:20"
+              "location": "src/step-definitions/Watch_Steps.ts:19"
             },
             "result": {
               "status": "passed",
-              "duration": 3213676541
+              "duration": 10335471166
             }
           },
           {
             "arguments": [],
             "keyword": "And ",
             "line": 10,
-            "name": "user select the first suggestion Charlotte Tilbury",
+            "name": "user select the first suggestion",
             "match": {
-              "location": "src/step-definitions/Beauty_Steps.ts:26"
+              "location": "src/step-definitions/Watch_Steps.ts:26"
             },
             "result": {
               "status": "passed",
-              "duration": 10896310666
+              "duration": 1230443082
             }
           },
           {
             "arguments": [],
             "keyword": "Then ",
             "line": 11,
-            "name": "user should verify price in product detail page of Charlotte Tilbury",
+            "name": "user should verify price in product detail page of Patek Phillippe",
             "match": {
-              "location": "src/step-definitions/Beauty_Steps.ts:32"
+              "location": "src/step-definitions/Watch_Steps.ts:31"
             },
             "result": {
               "status": "passed",
-              "duration": 930335290
+              "duration": 2005190582
             }
           },
           {
@@ -74,7 +74,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 476634750
+              "duration": 448156957
             }
           }
         ],
@@ -84,15 +84,15 @@
             "line": 1
           },
           {
-            "name": "@beauty",
+            "name": "@watch",
             "line": 1
           },
           {
-            "name": "@beauty-price",
+            "name": "@watch-price",
             "line": 7
           },
           {
-            "name": "@beauty-collection",
+            "name": "@watch-collection",
             "line": 7
           }
         ],
@@ -100,69 +100,69 @@
       },
       {
         "description": "",
-        "id": "luxehouze-beauty;verify-filter-beauty",
+        "id": "luxehouze-watch;verify-filter-watch",
         "keyword": "Scenario",
         "line": 14,
-        "name": "Verify filter beauty",
+        "name": "Verify filter watch",
         "steps": [
           {
             "keyword": "Before",
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 3013379915
+              "duration": 881096083
             }
           },
           {
             "arguments": [],
             "keyword": "Given ",
             "line": 5,
-            "name": "user navigate to the Luxehouze beauty page",
+            "name": "user navigate to the Luxehouze watch page",
             "match": {
-              "location": "src/step-definitions/Beauty_Steps.ts:7"
+              "location": "src/step-definitions/Watch_Steps.ts:7"
             },
             "result": {
               "status": "passed",
-              "duration": 2235909790
+              "duration": 2883767041
             }
           },
           {
             "arguments": [],
             "keyword": "When ",
             "line": 15,
-            "name": "user click category makeup in beauty page",
+            "name": "user click Omega in watch page",
             "match": {
-              "location": "src/step-definitions/Beauty_Steps.ts:37"
+              "location": "src/step-definitions/Watch_Steps.ts:36"
             },
             "result": {
               "status": "passed",
-              "duration": 6240964250
+              "duration": 11427446667
             }
           },
           {
             "arguments": [],
             "keyword": "And ",
             "line": 16,
-            "name": "user select filter beauty",
+            "name": "user select filter",
             "match": {
-              "location": "src/step-definitions/Beauty_Steps.ts:43"
+              "location": "src/step-definitions/Watch_Steps.ts:42"
             },
             "result": {
               "status": "passed",
-              "duration": 15656327874
+              "duration": 13641571042
             }
           },
           {
             "arguments": [],
             "keyword": "Then ",
             "line": 17,
-            "name": "user should verify result filter beauty in product detail page of makeup",
+            "name": "user should verify result filter in product detail page of Omega",
             "match": {
-              "location": "src/step-definitions/Beauty_Steps.ts:50"
+              "location": "src/step-definitions/Watch_Steps.ts:49"
             },
             "result": {
               "status": "passed",
-              "duration": 10178310457
+              "duration": 10263300833
             }
           },
           {
@@ -170,7 +170,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 490588959
+              "duration": 336115417
             }
           }
         ],
@@ -180,35 +180,35 @@
             "line": 1
           },
           {
-            "name": "@beauty",
+            "name": "@watch",
             "line": 1
           },
           {
-            "name": "@beauty-filter",
+            "name": "@watch-filter",
             "line": 13
           },
           {
-            "name": "@beauty-label",
+            "name": "@watch-label",
             "line": 13
           }
         ],
         "type": "scenario"
       }
     ],
-    "id": "luxehouze-beauty",
+    "id": "luxehouze-watch",
     "line": 2,
     "keyword": "Feature",
-    "name": "Luxehouze beauty",
+    "name": "Luxehouze Watch",
     "tags": [
       {
         "name": "@regression",
         "line": 1
       },
       {
-        "name": "@beauty",
+        "name": "@watch",
         "line": 1
       }
     ],
-    "uri": "src/features/Beauty.feature"
+    "uri": "src/features/Watch.feature"
   }
 ]

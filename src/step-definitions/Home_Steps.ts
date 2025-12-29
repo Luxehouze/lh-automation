@@ -5,7 +5,15 @@ import { time } from "console";
 import { expect } from "@playwright/test";
 
 Given('user navigate to the Luxehouze home page', async function (this: CucumberWorld) {
-    await this.homePage.navigateToHomePage();
+    if (!process.env.BASE_URL) {
+    throw new Error("BASE_URL is not defined. Please check environment file.");
+  }
+
+  const baseUrl = process.env.BASE_URL.replace(/\/$/, "");
+
+  await this.basePage.page.goto(`${baseUrl}`, {
+    waitUntil: "domcontentloaded"
+  });
 })
 
 

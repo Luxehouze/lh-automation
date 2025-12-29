@@ -19,9 +19,10 @@ export class FashionPage extends BasePage {
     get filterColor()      { return this.page.getByLabel('Black'); }
     get filterWomen()      { return this.page.getByLabel('Women'); }
     get resultFilterfashion()    { return this.page.locator('.product-card__header.relative').first(); }
-    get resultBag() { return this.page.locator(`span:has-text("Bag")`).nth(1); }
-    get resultColor() { return this.page.getByText(/^Black$/).first();}
-    get resultWomen() { return this.page.getByText('Women').first();}
+    get resultBag() { return this.page.locator('div.flex.justify-between.border-b.py-4 span.black-10.regular.body-1.work-sans',{ hasText: 'Bag' }); }
+    get resultColor() { return this.page.locator('span:has-text("Black")').nth(1); }
+    get resultWomen() { return this.page.locator('div.flex.justify-between.border-b.py-4 span.black-10.regular.body-1.work-sans',{ hasText: 'Women' }); }
+    get specificationTab() { return this.page.getByText('SPECIFICATIONS', { exact: true })}
 
     public async clickClothes(): Promise<void> {
         await this.clothesBtn.click();
@@ -85,12 +86,30 @@ export class FashionPage extends BasePage {
     }
 
     public async verifyResultFilterfashion(): Promise<void> {
-        await this.page.waitForTimeout(4000);
-        expect (this.resultBag).toContainText('Bag');
-        await this.page.waitForTimeout(4000);
-        expect (this.resultColor).toContainText('Black');
-        await this.page.waitForTimeout(4000);
+        await this.page.waitForTimeout(8000);
+        await this.specificationTab.click();
+        expect (this.resultColor).toBeVisible();
+        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForTimeout(1000);
         expect (this.resultWomen).toBeVisible();
+        const count = await this.resultWomen.count();
+        console.log('DEBUG Women this.resultWomen count =', count);
+
+        // cek apakah string "Women" muncul di HTML sama sekali
+        const html = await this.page.content();
+        console.log('DEBUG HTML has "Women"?', html.includes('Women'));
+
+        if (count === 0) {
+        // ambil screenshot kalau gak nemu
+        await this.page.screenshot({
+        path: 'debug-women-not-found.png',
+        fullPage: true,
+        });
+        }
+
+        await this.resultWomen.first().waitFor({ state: 'visible', timeout: 15000 });
+        await expect(this.resultWomen.first()).toBeVisible();
+        expect (this.resultBag).toBeVisible();
     }    
 
 

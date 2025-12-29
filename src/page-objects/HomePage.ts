@@ -12,13 +12,6 @@ export class HomePage extends BasePage {
     get sellAWatchBtn() { return this.page.locator('//div//div//div[2]//div[1]//div[1]//button[2]//span[1]'); }
     get viewAllWatchesBtn()      { return this.page.getByRole('button', { name: 'VIEW ALL WATCHES' }).first(); }
     
-
-    public async navigateToHomePage(): Promise<void> {
-        const baseUrl = process.env.BASE_URL || "https://www.luxehouze.com/id/en/";
-        await this.page.goto(baseUrl, { waitUntil: "domcontentloaded" });
-        await expect(this.page).toHaveURL(/luxehouze\.com/);
-    }
-    
     public async clickThirdBanner(): Promise<void> {
         await this.page.evaluate(() => window.scrollTo(0, 0));
         await this.page.waitForTimeout(3000);
