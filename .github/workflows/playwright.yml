@@ -6,7 +6,7 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
   schedule:
-    - cron: '0 2-13 * * *' # setiap hari jam 09:00 WIB
+    - cron: '0 2,11 */2 * *' # setiap hari jam 09:00 WIB & 18:00 WIB
 jobs:
   test:
     timeout-minutes: 60
@@ -19,7 +19,7 @@ jobs:
       UI_AUTOMATION_BROWSER: ${{ matrix.browser }}
       HEADLESS: true
       PARALLEL: 1
-      RETRY: 1
+      RETRY: 0
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
