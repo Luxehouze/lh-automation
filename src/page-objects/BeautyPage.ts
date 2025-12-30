@@ -21,16 +21,17 @@ export class BeautyPage extends BasePage {
     }
 
     public async selectFirstProductCT(): Promise<void> {
+        console.log('DEBUG URL =', this.page.url());
          // tunggu sampai suggestion muncul
-  await this.firstProductCT.waitFor({ state: 'visible', timeout: 15000 });
+        await this.firstProductCT.waitFor({ state: 'visible', timeout: 15000 });
 
-  const count = await this.firstProductCT.count();
-  console.log('DEBUG Airbrush suggestions count =', count);
+        const count = await this.firstProductCT.count();
+        console.log('DEBUG Airbrush suggestions count =', count);
 
-  const target =
-    count > 1
-      ? this.firstProductCT.nth(1)   // kalau memang selalu mau click yang kedua
-      : this.firstProductCT.first(); // fallback kalau cuma 1
+        const target =
+        count > 1
+        ? this.firstProductCT.nth(1)   // kalau memang selalu mau click yang kedua
+        : this.firstProductCT.first(); // fallback kalau cuma 1
         // await this.page.waitForTimeout(6000);
         await this.firstProductCT.click();
     }
@@ -50,11 +51,16 @@ export class BeautyPage extends BasePage {
     }
 
     public async selectFilterBeauty(): Promise<void> {
+        console.log('DEBUG Before filter URL =', await this.page.url());
+        await this.page.screenshot({ path: 'debug-before-filter-beauty.png', fullPage: true });
         await this.page.waitForLoadState('networkidle');
         const dior = this.filterDior;
+        console.log('DEBUG URL =', this.page.url());
         console.log('DEBUG Dior count =', await dior.count());
         await dior.scrollIntoViewIfNeeded();
         await expect(dior).toBeVisible({ timeout: 15000 });
+        const html = await this.page.content();
+        console.log('DEBUG HTML has "Dior"?', html.includes('Dior'));
         await dior.check({ force: true });
         // await this.filterDior.click();
         await this.page.waitForTimeout(6000);

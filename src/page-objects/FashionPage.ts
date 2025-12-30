@@ -25,6 +25,7 @@ export class FashionPage extends BasePage {
     get specificationTab() { return this.page.getByText('SPECIFICATIONS', { exact: true })}
 
     public async clickClothes(): Promise<void> {
+        console.log('DEBUG URL =', this.page.url());
         // tunggu page stabil
     await this.page.waitForLoadState('networkidle');
 
@@ -89,26 +90,32 @@ export class FashionPage extends BasePage {
     }
 
     public async selectFilterfashion(): Promise<void> {
+        console.log('DEBUG Before filter URL =', await this.page.url());
+        await this.page.screenshot({ path: 'debug-before-filter-fashion.png', fullPage: true });
         await this.page.waitForLoadState('networkidle');
 
-  const label = this.filterBag;
+        const label = this.filterBag;
 
-  const count = await label.count();
-  console.log('DEBUG Bag label count =', count);
+        const count = await label.count();
+        console.log('DEBUG Bag label count =', count);
 
-  if (count === 0) {
-    await this.page.screenshot({
-      path: 'debug-bag-label-not-found.png',
-      fullPage: true,
-    });
-    throw new Error('Bag label not found');
-  }
+        const html = await this.page.content();
+        console.log('DEBUG HTML has "Bag"?', html.includes('Bag'));
 
-  await label.first().scrollIntoViewIfNeeded();
-  await expect(label.first()).toBeVisible({ timeout: 15000 });
 
-  // klik label-nya (akan toggle checkbox di dalamnya)
-  await label.first().click();
+        if (count === 0) {
+        await this.page.screenshot({
+        path: 'debug-bag-label-not-found.png',
+        fullPage: true,
+        });
+        throw new Error('Bag label not found');
+    }
+
+        await label.first().scrollIntoViewIfNeeded();
+        await expect(label.first()).toBeVisible({ timeout: 15000 });
+
+        // klik label-nya (akan toggle checkbox di dalamnya)
+        await label.first().click();
         await this.page.waitForTimeout(3000);
         await this.filterColor.scrollIntoViewIfNeeded();
         await this.filterColor.click();
@@ -119,8 +126,8 @@ export class FashionPage extends BasePage {
         console.log('DEBUG Women this.filterWomen count =', womenCount);
 
         // cek apakah string "Women" muncul di HTML sama sekali
-        const html = await this.page.content();
-        console.log('DEBUG HTML has "Women"?', html.includes('Women'));
+        const htmlWomen = await this.page.content();
+        console.log('DEBUG HTML has "Women"?', htmlWomen.includes('Women'));
 
         if (womenCount === 0) {
         // ambil screenshot kalau gak nemu

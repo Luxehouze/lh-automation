@@ -14,6 +14,7 @@ Given('user navigate to the Luxehouze home page', async function (this: Cucumber
   await this.basePage.page.goto(`${baseUrl}`, {
     waitUntil: "domcontentloaded"
   });
+  console.log('DEBUG URL =', this.basePage.page.url());
 })
 
 

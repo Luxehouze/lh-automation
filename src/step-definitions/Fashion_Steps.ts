@@ -14,6 +14,7 @@ Given('user navigate to the Luxehouze fashion page', async function (this: Cucum
   await this.basePage.page.goto(`${baseUrl}/fashion`, {
     waitUntil: "domcontentloaded"
   });
+  console.log('DEBUG URL =', this.basePage.page.url());
   
 })
 

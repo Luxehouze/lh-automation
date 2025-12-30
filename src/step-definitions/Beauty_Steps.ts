@@ -14,7 +14,7 @@ Given('user navigate to the Luxehouze beauty page', async function (this: Cucumb
   await this.basePage.page.goto(`${baseUrl}/beauty`, {
     waitUntil: "domcontentloaded"
   });
-  
+  console.log('DEBUG URL =', this.basePage.page.url());
 })
 
 When('user click Charlotte Tilbury in beauty page', async function (this: CucumberWorld) {

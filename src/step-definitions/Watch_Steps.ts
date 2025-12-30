@@ -14,6 +14,7 @@ Given('user navigate to the Luxehouze watch page', async function (this: Cucumbe
   await this.basePage.page.goto(`${baseUrl}/watch`, {
     waitUntil: "domcontentloaded"
   });
+  console.log('DEBUG URL =', this.basePage.page.url());
 })
 
 When('user click patek phillippe in watch page', async function (this: CucumberWorld) {
