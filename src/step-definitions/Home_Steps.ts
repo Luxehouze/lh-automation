@@ -55,6 +55,7 @@ When('user click {string}', async function (this: CucumberWorld, buttonName: str
         await this.basePage.closeNewsletterPopupIfVisible();
         await this.homePage.clickBuyAWatch();
     } else {
+        await this.basePage.closeNewsletterPopupIfVisible();
         await pageFixture.page.waitForTimeout(6000);
         await this.homePage.clickSellAWatch();
     }

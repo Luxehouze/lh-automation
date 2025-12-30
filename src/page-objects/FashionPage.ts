@@ -15,9 +15,9 @@ export class FashionPage extends BasePage {
     get firstProductpriceClothes() { return this.page.locator('.black-10.semibold.title-3.work-sans.svelte-1j3rafz') }
     get priceClothesPDP() { return this.page.locator('span.title-3', { hasText: 'Rp' }) }
     get pradaBtn() { return this.page.locator("//div[3]//button[5]"); }
-    get filterBag()      { return this.page.getByLabel('Bag'); }
+    get filterBag()      { return this.page.locator('label:has-text("Bag")'); }
     get filterColor()      { return this.page.getByLabel('Black'); }
-    get filterWomen()      { return this.page.getByLabel('Women'); }
+    get filterWomen()      { return this.page.locator('span.black-6.regular.body-1.work-sans.pl-2',{ hasText: 'Women' }); }
     get resultFilterfashion()    { return this.page.locator('.product-card__header.relative').first(); }
     get resultBag() { return this.page.locator('div.flex.justify-between.border-b.py-4 span.black-10.regular.body-1.work-sans',{ hasText: 'Bag' }); }
     get resultColor() { return this.page.locator('span:has-text("Black")').nth(1); }
@@ -25,7 +25,25 @@ export class FashionPage extends BasePage {
     get specificationTab() { return this.page.getByText('SPECIFICATIONS', { exact: true })}
 
     public async clickClothes(): Promise<void> {
-        await this.clothesBtn.click();
+        // tunggu page stabil
+    await this.page.waitForLoadState('networkidle');
+
+    const locator = this.clothesBtn;
+
+    const count = await locator.count();
+    console.log('DEBUG Clothes count =', count);
+
+    if (count === 0) {
+    console.log('DEBUG taking screenshot for Clothes not found');
+    await this.page.screenshot({
+      path: 'debug-clothes-not-found.png',
+      fullPage: true,
+    });
+  }
+
+  await locator.first().waitFor({ state: 'visible', timeout: 15000 });
+  await locator.first().click();
+        // await this.clothesBtn.click();
     }
 
     public async selectFirstProductClothes(): Promise<void> {
@@ -68,15 +86,49 @@ export class FashionPage extends BasePage {
     }
 
     public async selectFilterfashion(): Promise<void> {
-        await this.page.waitForTimeout(3000);
-        await this.filterBag.scrollIntoViewIfNeeded();
-        await this.filterBag.click();
+        await this.page.waitForLoadState('networkidle');
+
+  const label = this.filterBag;
+
+  const count = await label.count();
+  console.log('DEBUG Bag label count =', count);
+
+  if (count === 0) {
+    await this.page.screenshot({
+      path: 'debug-bag-label-not-found.png',
+      fullPage: true,
+    });
+    throw new Error('Bag label not found');
+  }
+
+  await label.first().scrollIntoViewIfNeeded();
+  await expect(label.first()).toBeVisible({ timeout: 15000 });
+
+  // klik label-nya (akan toggle checkbox di dalamnya)
+  await label.first().click();
         await this.page.waitForTimeout(3000);
         await this.filterColor.scrollIntoViewIfNeeded();
         await this.filterColor.click();
-        await this.page.waitForTimeout(3000);
-        await this.filterWomen.scrollIntoViewIfNeeded();
-        await this.filterWomen.click();
+        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForTimeout(1000);
+        expect (this.filterWomen).toBeVisible();
+        const womenCount = await this.filterWomen.count();
+        console.log('DEBUG Women this.filterWomen count =', womenCount);
+
+        // cek apakah string "Women" muncul di HTML sama sekali
+        const html = await this.page.content();
+        console.log('DEBUG HTML has "Women"?', html.includes('Women'));
+
+        if (womenCount === 0) {
+        // ambil screenshot kalau gak nemu
+        await this.page.screenshot({
+        path: 'debug-women-not-found.png',
+        fullPage: true,
+        });
+        }
+
+        await this.filterWomen.first().waitFor({ state: 'visible', timeout: 15000 });
+        await expect(this.filterWomen.first()).toBeVisible();
     }
 
     public async clickResultFilterfashion(): Promise<void> {
@@ -92,23 +144,6 @@ export class FashionPage extends BasePage {
         await this.page.waitForLoadState('networkidle');
         await this.page.waitForTimeout(1000);
         expect (this.resultWomen).toBeVisible();
-        const count = await this.resultWomen.count();
-        console.log('DEBUG Women this.resultWomen count =', count);
-
-        // cek apakah string "Women" muncul di HTML sama sekali
-        const html = await this.page.content();
-        console.log('DEBUG HTML has "Women"?', html.includes('Women'));
-
-        if (count === 0) {
-        // ambil screenshot kalau gak nemu
-        await this.page.screenshot({
-        path: 'debug-women-not-found.png',
-        fullPage: true,
-        });
-        }
-
-        await this.resultWomen.first().waitFor({ state: 'visible', timeout: 15000 });
-        await expect(this.resultWomen.first()).toBeVisible();
         expect (this.resultBag).toBeVisible();
     }    
 
