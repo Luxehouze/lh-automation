@@ -6,9 +6,9 @@ export class BeautyPage extends BasePage {
 
     get charlotteTilburyBtn() { return this.page.locator("//body/div/div/main/div/div/div/button[3]/img[1]"); }
     get makeupBtn() { return this.page.locator('.black-9.medium.subtitle-3.work-sans.svelte-1j3rafz').first(); }
-    get firstProductCT() { return this.page.getByText(/Airbrush Flawless Finish Complexion/i).nth(1); }
+    get firstProductCT() { return this.page.getByRole('link', { name: 'watermark Airbrush Flawless' }).first(); }
     get priceCT() { return this.page.locator('.red-5.semibold.subtitle-2.work-sans.svelte-1j3rafz') }
-    get filterDior()      { return this.page.locator('#category-Dior'); }
+    get filterDior()      { return this.page.locator('label:has-text("Dior")'); }
     get filterHotRightNow()      { return this.page.getByLabel('Hot Right Now'); }
     get filterFace()      { return this.page.getByRole('checkbox', { name: 'Face', exact: true }); }
     get firstProductDior()      { return this.page.locator('.product-card__content.text-balance.z-10.relative').first(); }
@@ -22,7 +22,7 @@ export class BeautyPage extends BasePage {
 
     public async selectFirstProductCT(): Promise<void> {
          // tunggu sampai suggestion muncul
-  await this.firstProductCT.first().waitFor({ state: 'visible', timeout: 15000 });
+  await this.firstProductCT.waitFor({ state: 'visible', timeout: 15000 });
 
   const count = await this.firstProductCT.count();
   console.log('DEBUG Airbrush suggestions count =', count);
@@ -38,7 +38,9 @@ export class BeautyPage extends BasePage {
     public async verifyCharlotteTilburyPrice(): Promise<void> {
         await this.page.waitForSelector('text=Charlotte', { timeout: 10000 });
         await this.priceCT.waitFor();
-        await expect(this.priceCT).toContainText('Rp');
+        // await expect(this.priceCT).toContainText('Rp');
+        const expectedCurrency = process.env.DEFAULT_CURRENCY_SYMBOL ?? 'Rp';
+        await expect(this.priceCT).toContainText(expectedCurrency);
     }
 
     public async clickMakeup(): Promise<void> {

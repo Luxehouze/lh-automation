@@ -33,7 +33,9 @@ export class WatchPage extends BasePage {
     public async verifyPatekPhilippePrice(): Promise<void> {
         await this.page.waitForSelector('text=Patek Philippe', { timeout: 10000 });
         await this.pricePP.waitFor();
-        await expect(this.pricePP).toContainText('Rp');
+        // await expect(this.pricePP).toContainText('Rp');
+        const expectedCurrency = process.env.DEFAULT_CURRENCY_SYMBOL ?? 'Rp';
+        await expect(this.pricePP).toContainText(expectedCurrency);
     }
 
     public async clickOmega(): Promise<void> {

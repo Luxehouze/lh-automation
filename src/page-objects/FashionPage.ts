@@ -10,7 +10,7 @@ export class FashionPage extends BasePage {
     // private listingPriceText?: string;
     // private detailPriceText?: string;
 
-    get clothesBtn() { return this.page.getByText('Clothes').first(); }
+    get clothesBtn() { return this.page.getByText('Clothes'); }
     get firstProductClothes()      { return this.page.getByText('Sweater Poodle Stripe Crewneck Multicolour').last(); }
     get firstProductpriceClothes() { return this.page.locator('.black-10.semibold.title-3.work-sans.svelte-1j3rafz') }
     get priceClothesPDP() { return this.page.locator('span.title-3', { hasText: 'Rp' }) }
@@ -66,7 +66,10 @@ export class FashionPage extends BasePage {
     public async verifyClothesPrice(): Promise<void> {
         await this.page.waitForSelector('text=Sweater Poodle', { timeout: 10000 });
         await this.firstProductpriceClothes.waitFor();
-        await expect(this.firstProductpriceClothes).toContainText('Rp');
+        // await expect(this.firstProductpriceClothes).toContainText('Rp');
+        const expectedCurrency = process.env.DEFAULT_CURRENCY_SYMBOL ?? 'Rp';
+        await expect(this.firstProductpriceClothes).toContainText(expectedCurrency);
+        
         // console.log("VERIFY listPrice:", this.listingPriceText);
         // console.log("VERIFY pdpPrice:", this.detailPriceText);
         // if (!this.listingPriceText || !this.detailPriceText) {

@@ -8,8 +8,8 @@ export class HomePage extends BasePage {
     get searchInput() { return this.page.locator("#search-navbar"); }
     get searchResult() { return this.page.locator('.black-10.semibold.subtitle-1.work-sans.svelte-1j3rafz'); }
     get unlockMoreLuxefestBtn() { return this.page.getByRole('button', { name: 'UNLOCK MORE ON LUXEFEST' }); }
-    get buyAWatchBtn() { return this.page.locator('//body/div/div/main/div[2]/div[1]/div[1]/button[1]/span[1]'); }
-    get sellAWatchBtn() { return this.page.locator('//div//div//div[2]//div[1]//div[1]//button[2]//span[1]'); }
+    get buyAWatchBtn() { return this.page.locator('span').filter({ hasText: 'BUY A WATCH' }).first(); }
+    get sellAWatchBtn() { return this.page.locator('span').filter({ hasText: 'SELL A WATCH' }).first(); }
     get viewAllWatchesBtn()      { return this.page.getByRole('button', { name: 'VIEW ALL WATCHES' }).first(); }
     
     public async clickThirdBanner(): Promise<void> {
