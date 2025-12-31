@@ -18,7 +18,7 @@ jobs:
       BASE_URL: ${{ secrets.BASE_URL }}
       UI_AUTOMATION_BROWSER: ${{ matrix.browser }}
       HEADLESS: true
-      PARALLEL: 1
+      PARALLEL: 5
       RETRY: 0
     steps:
     - uses: actions/checkout@v4
@@ -77,16 +77,6 @@ jobs:
         curl -H "Content-Type: application/json" \
           --data @discord_payload.json \
           "$DISCORD_WEBHOOK_URL"
-    - name: Download all reports
-      uses: actions/download-artifact@v4
-      with:
-        path: reports
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-          node-version: 18
-    - name: Update dashboard index.html
-      run: node update-dashboard.js
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
