@@ -19,7 +19,7 @@ Given('user navigate to the Luxehouze beauty page', async function (this: Cucumb
 
 When('user click Charlotte Tilbury in beauty page', async function (this: CucumberWorld) {
     await this.basePage.zoomOut();
-    await pageFixture.page.waitForTimeout(3000);
+    await pageFixture.page.waitForTimeout(8000);
     await this.beautyPage.clickCharlotteTilbury();
 })
 
