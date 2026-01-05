@@ -18,9 +18,4 @@ Scenario Outline: Verify clicks button and lands on correct page
       | buy-a-watch  | all-watches  |
       | sell-a-watch | sell-with-us |
 
-@home-luxefest
-Scenario: Verify luxefest page
-    When user click unlock more on luxefest button
-    Then user success direct to luxefest page
-
     

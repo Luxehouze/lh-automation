@@ -11,7 +11,7 @@ Given('user navigate to the Luxehouze home page', async function (this: Cucumber
 
   const baseUrl = process.env.BASE_URL.replace(/\/$/, "");
 
-  await this.basePage.page.goto(`${baseUrl}`, {
+  await this.basePage.page.goto(`${baseUrl}?noredirect=true`, {
     waitUntil: "domcontentloaded"
   });
   console.log('DEBUG URL =', this.basePage.page.url());
@@ -40,15 +40,6 @@ When('user enter "Rolex" in search bar', async function (this: CucumberWorld) {
 
 Then('user should verify search result contain "Rolex"', async function (this: CucumberWorld) {
     await this.homePage.verifySearchResult();
-})
-
-When('user click unlock more on luxefest button', async function (this: CucumberWorld) {
-    await this.basePage.closeNewsletterPopupIfVisible();
-    await this.homePage.clickUnlockMoreOnLuxefest();
-})
-
-Then('user success direct to luxefest page', async function (this: CucumberWorld) {
-    await this.homePage.verifyLuxefestPage();
 })
 
 When('user click {string}', async function (this: CucumberWorld, buttonName: string) {

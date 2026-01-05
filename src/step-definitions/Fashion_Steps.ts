@@ -11,7 +11,7 @@ Given('user navigate to the Luxehouze fashion page', async function (this: Cucum
 
   const baseUrl = process.env.BASE_URL.replace(/\/$/, "");
 
-  await this.basePage.page.goto(`${baseUrl}/fashion`, {
+  await this.basePage.page.goto(`${baseUrl}/fashion?noredirect=true`, {
     waitUntil: "domcontentloaded"
   });
   console.log('DEBUG URL =', this.basePage.page.url());
