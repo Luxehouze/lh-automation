@@ -12,7 +12,7 @@ Given('user navigate to the Luxehouze home page', async function (this: Cucumber
   const baseUrl = process.env.BASE_URL.replace(/\/$/, "");
 
   await this.basePage.page.goto(`${baseUrl}?noredirect=true`, {
-    waitUntil: "domcontentloaded"
+    waitUntil: "domcontentloaded", timeout: 15000,
   });
   console.log('DEBUG URL =', this.basePage.page.url());
 })
@@ -38,8 +38,8 @@ When('user enter "Rolex" in search bar', async function (this: CucumberWorld) {
     await this.homePage.enterSearchQuery("Rolex");
 })
 
-Then('user should verify search result contain "Rolex"', async function (this: CucumberWorld) {
-    await this.homePage.verifySearchResult();
+Then('user should verify search result contain "rolex"', async function (this: CucumberWorld, keyword: string) {
+    await this.homePage.verifySearchResult(keyword);
 })
 
 When('user click {string}', async function (this: CucumberWorld, buttonName: string) {

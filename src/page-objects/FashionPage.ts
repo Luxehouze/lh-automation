@@ -26,8 +26,7 @@ export class FashionPage extends BasePage {
 
     public async clickClothes(): Promise<void> {
         console.log('DEBUG URL =', this.page.url());
-        // tunggu page stabil
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
 
     const locator = this.clothesBtn;
 
@@ -44,7 +43,6 @@ export class FashionPage extends BasePage {
 
   await locator.first().waitFor({ state: 'visible', timeout: 15000 });
   await locator.first().click();
-        // await this.clothesBtn.click();
     }
 
     public async selectFirstProductClothes(): Promise<void> {
@@ -56,18 +54,17 @@ export class FashionPage extends BasePage {
     const raw = await this.firstProductpriceClothes.innerText();
     console.log("Price from product list:", raw);
     return raw.trim();
-  }
+    }
 
     public async getPriceFromDetail(): Promise<string> {
     const raw = await this.priceClothesPDP.innerText();
     console.log("Price from pdp:", raw);
     return raw.trim();
-  }
+    }
     
     public async verifyClothesPrice(): Promise<void> {
         await this.page.waitForSelector('text=Sweater Poodle', { timeout: 10000 });
         await this.firstProductpriceClothes.waitFor();
-        // await expect(this.firstProductpriceClothes).toContainText('Rp');
         const expectedCurrency = process.env.DEFAULT_CURRENCY_SYMBOL ?? 'Rp';
         await expect(this.firstProductpriceClothes).toContainText(expectedCurrency);
         
@@ -84,6 +81,9 @@ export class FashionPage extends BasePage {
     }
 
     public async clickPrada(): Promise<void> {
+        console.log('DEBUG Before Prada URL =', await this.page.url());
+        await this.page.screenshot({ path: 'debug-before-prada-click.png', fullPage: true });
+        await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForTimeout(3000);
         await this.pradaBtn.scrollIntoViewIfNeeded();
         await this.pradaBtn.click();
@@ -92,7 +92,8 @@ export class FashionPage extends BasePage {
     public async selectFilterfashion(): Promise<void> {
         console.log('DEBUG Before filter URL =', await this.page.url());
         await this.page.screenshot({ path: 'debug-before-filter-fashion.png', fullPage: true });
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForTimeout(6000);
 
         const label = this.filterBag;
 
@@ -119,7 +120,7 @@ export class FashionPage extends BasePage {
         await this.page.waitForTimeout(3000);
         await this.filterColor.scrollIntoViewIfNeeded();
         await this.filterColor.click();
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForTimeout(1000);
         expect (this.filterWomen).toBeVisible();
         const womenCount = await this.filterWomen.count();
@@ -142,16 +143,20 @@ export class FashionPage extends BasePage {
     }
 
     public async clickResultFilterfashion(): Promise<void> {
+        console.log('DEBUG Before result filter URL =', await this.page.url());
+        await this.page.screenshot({ path: 'debug-before-result-filter-fashion.png', fullPage: true });
+        await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForTimeout(2000);
         await this.resultFilterfashion.scrollIntoViewIfNeeded();
         await this.resultFilterfashion.click();
     }
 
     public async verifyResultFilterfashion(): Promise<void> {
+        await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForTimeout(8000);
         await this.specificationTab.click();
         expect (this.resultColor).toBeVisible();
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForTimeout(1000);
         expect (this.resultWomen).toBeVisible();
         expect (this.resultBag).toBeVisible();

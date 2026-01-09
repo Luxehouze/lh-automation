@@ -5,6 +5,7 @@
   "scripts": {
     "test": "npx playwright test",
     "cucumber": "npx cucumber-js 'src/features/**/*.feature' --require-module ts-node/register --require './src/config/load-env.ts' --require './src/utils/cucumber-timeout.ts' --require 'src/step-definitions/hooks/**/*.ts' --require 'src/step-definitions/**/*.ts' --format html:./reports/cucumber/report.html --format progress --format summary",
+    "ci:cucumber": "npx cucumber-js \"src/features/*.feature\" --require-module ts-node/register --require \"src/step-definitions/**/*.ts\" --require \"src/utils/cucumber-timeout.ts\" --format json:./reports/firefox/report.json --format html:./reports/firefox/report.html --format progress --parallel 4 --retry 0 --tags \"not @ignore\"",
     "cucumberByPass": "npx cucumber-js 'src/features/**/*.feature' --require-module ts-node/register --require 'src/step-definitions/hooks/**/*.ts' --require 'src/step-definitions/**/*.ts' --format progress --format summary",
     "test:all": "./run-all.sh",
     "regressionWebkit": "UI_AUTOMATION_BROWSER=webkit cucumber-js ./src/features/*.feature --require-module ts-node/register --require ./src/step-definitions/**/**/*.ts  --require ./src/utils/cucumber-timeout.ts --format html:./reports/webkit/report.html --parallel ${parallelValue} --tags @regression",

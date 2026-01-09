@@ -17,10 +17,12 @@ export class BeautyPage extends BasePage {
  }
     
     public async clickCharlotteTilbury(): Promise<void> {
+        await this.page.waitForLoadState('domcontentloaded');
         await this.charlotteTilburyBtn.click();
     }
 
     public async selectFirstProductCT(): Promise<void> {
+        await this.page.waitForLoadState('domcontentloaded');
         console.log('DEBUG URL =', this.page.url());
          // tunggu sampai suggestion muncul
         await this.firstProductCT.waitFor({ state: 'visible', timeout: 15000 });
@@ -37,14 +39,17 @@ export class BeautyPage extends BasePage {
     }
 
     public async verifyCharlotteTilburyPrice(): Promise<void> {
+        await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForSelector('text=Charlotte', { timeout: 10000 });
         await this.priceCT.waitFor();
-        // await expect(this.priceCT).toContainText('Rp');
         const expectedCurrency = process.env.DEFAULT_CURRENCY_SYMBOL ?? 'Rp';
         await expect(this.priceCT).toContainText(expectedCurrency);
     }
 
     public async clickMakeup(): Promise<void> {
+        console.log('DEBUG Before makeup URL =', await this.page.url());
+        await this.page.screenshot({ path: 'debug-before-makeup-click.png', fullPage: true });
+        await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForTimeout(6000);
         await this.makeupBtn.scrollIntoViewIfNeeded();
         await this.makeupBtn.click();
@@ -53,7 +58,8 @@ export class BeautyPage extends BasePage {
     public async selectFilterBeauty(): Promise<void> {
         console.log('DEBUG Before filter URL =', await this.page.url());
         await this.page.screenshot({ path: 'debug-before-filter-beauty.png', fullPage: true });
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForTimeout(6000);
         const dior = this.filterDior;
         console.log('DEBUG URL =', this.page.url());
         console.log('DEBUG Dior count =', await dior.count());
@@ -72,12 +78,18 @@ export class BeautyPage extends BasePage {
     }
 
     public async clickResultFilterBeauty(): Promise<void> {
+        console.log('DEBUG Before result filter URL =', await this.page.url());
+        await this.page.screenshot({ path: 'debug-before-result-filter-beauty.png', fullPage: true });
+        await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForTimeout(6000);
         await this.firstProductDior.scrollIntoViewIfNeeded();
         await this.firstProductDior.click();
     }
 
     public async verifyResultFilterBeauty(): Promise<void> {
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForTimeout(8000);
+        expect (this.resultHotRightNow).toContainText('HOT RIGHT NOW');
         await this.page.waitForTimeout(8000);
         expect (this.resultDior).toContainText('Dior');
     }

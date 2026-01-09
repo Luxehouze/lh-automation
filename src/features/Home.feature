@@ -7,7 +7,7 @@ Background: Pre conditions
 @home-search
 Scenario: Verify search functionality on home page
     When user enter "Rolex" in search bar
-    Then user should verify search result contain "Rolex"
+    Then user should verify search result contain "rolex"
 
 @home-luxury-watches
 Scenario Outline: Verify clicks button and lands on correct page

@@ -23,14 +23,19 @@ export class WatchPage extends BasePage {
     get resultDial() { return this.page.getByText(/Blue/i);}
 
     public async clickPatekPhillippe(): Promise<void> {
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForSelector('text=Patek Philippe', { timeout: 10000 });
         await this.patekPhillippeLink.click();
     }
 
     public async selectFirstProductPP(): Promise<void> {
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForSelector('text=Patek Philippe', { timeout: 10000 });
         await this.firstProductPP.click();
     }
 
     public async verifyPatekPhilippePrice(): Promise<void> {
+        await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForSelector('text=Patek Philippe', { timeout: 10000 });
         await this.pricePP.waitFor();
         // await expect(this.pricePP).toContainText('Rp');
@@ -39,10 +44,12 @@ export class WatchPage extends BasePage {
     }
 
     public async clickOmega(): Promise<void> {
+        await this.page.waitForLoadState('domcontentloaded');
         await this.omegaLink.click();
     }
 
     public async selectFilter(): Promise<void> {
+        await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForTimeout(3000);
         await this.filterMostPopular.scrollIntoViewIfNeeded();
         await this.filterMostPopular.click();
@@ -55,12 +62,14 @@ export class WatchPage extends BasePage {
     }
 
     public async clickResultFilter(): Promise<void> {
+        await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForTimeout(2000);
         await this.resultFilter.scrollIntoViewIfNeeded();
         await this.resultFilter.click();
     }
 
     public async verifyResultFilter(): Promise<void> {
+        await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForTimeout(4000);
         expect (this.resultLabel).toContainText('MOST POPULAR');
         await this.page.waitForTimeout(4000);
@@ -71,11 +80,12 @@ export class WatchPage extends BasePage {
     }
 
     public async clickRichardMille(): Promise<void> {
+        await this.page.waitForLoadState('domcontentloaded');
         await this.richardMilleLink.click();
     }
 
     public async verifySortResult(): Promise<void> {
-        // Implement verification logic for sorted results
+        await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForTimeout(4000);
     }
 

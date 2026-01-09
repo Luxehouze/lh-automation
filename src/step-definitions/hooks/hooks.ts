@@ -1,18 +1,21 @@
-import { After, AfterAll, Before, BeforeAll, Status, World } from "@cucumber/cucumber";
-import { Browser, BrowserType,  firefox, webkit } from "playwright";
+import { After, Before, Status, World } from "@cucumber/cucumber";
+import { Browser, BrowserContext, BrowserType, Page, chromium, firefox, webkit } from "playwright";
 import { pageFixture } from "./browserContextFixture";
 import { config as loadEnv } from "dotenv"
 import path from "path";
 import { BasePage } from "../../page-objects/base/BasePage";
 import { PageManager } from "../../page-objects/base/PageManager";
+import dotenv from "dotenv";
+import "../../config/load-env";
 
 // const env = loadEnv({ path: './env/.env', override: true});
 const ENV_NAME = process.env.NODE_ENV || "production";
 
-loadEnv({
-  path: path.join(process.cwd(), `../../env/.env.${ENV_NAME}`),
-  override: true,
-});
+// loadEnv({
+//   path: path.join(process.cwd(), `../../env/.env.${ENV_NAME}`),
+//   override: true,
+// });
+dotenv.config({ path: path.resolve(__dirname, "../../env/.env." + ENV_NAME), });
 //Create a configuration object for easy access to env variables
 const config = {
     headless: process.env.HEADLESS === 'true',
@@ -21,93 +24,59 @@ const config = {
     height: parseInt(process.env.BROWSER_HEIGHT || '1080'),
 }
 
-//Create dictionary mapping browser names to their launch functions
-const browsers: { [key: string]: BrowserType } = {
-    'firefox': firefox,
-    'webkit': webkit
-};
-
-let browserInstance: Browser | null = null;
-
-async function initializeBrowserContext(selectedBrowser: string): Promise<Browser> {
-    const launchBrowser = browsers[selectedBrowser];
-    if(!launchBrowser) {
-        throw new Error(`Invalid browser selected: ${selectedBrowser}`);
-    }
-
-    return await launchBrowser.launch({ headless: config.headless});
-}
-
-async function initializePage(): Promise<void> {
-    if(!browserInstance) {
-        throw new Error('Browser instance is null');
-    }
-    pageFixture.context = await browserInstance.newContext({
-        ignoreHTTPSErrors: true
-    });
-    pageFixture.page = await pageFixture.context.newPage();
-    await pageFixture.page.setViewportSize({width: 1920,height: 1080});
-}
-
-//BeforeAll hook: Runs once before all scenarios
-BeforeAll(async function(){
-    console.log("\nExecuting test suite...");
-})
-
-//AfterAll hook: Runs once after all scenarios
-AfterAll(async function(){
-    console.log("\nFinished execution of test suite!");
-})
-const browserType = process.env.UI_AUTOMATION_BROWSER?.trim().toLowerCase() || 'firefox';
-// Before hook: Runs before each scenario
 Before(async function () {
-    try {
-        browserInstance = await initializeBrowserContext(config.browser);
-        // const browsers = await initializeBrowserContext([config.browser]);
-        // browserInstance = browsers[0];
-        console.log(`Browser context initialized for: ${config.browser}`);
-        await initializePage();
-        await this.basePage.zoomOut();
+  const browserName = process.env.UI_AUTOMATION_BROWSER || 'firefox';
+  const headless = process.env.HEADLESS === 'true';
 
-        // this.pageManager = new PageManager();
-        // this.basePage = this.pageManager.createBasePage();
-        // this.homePage = this.pageManager.createHomePage();
-        // this.watchPage = this.pageManager.createWatchPage();
-        // this.beautyPage = this.pageManager.createBeautyPage();
-        // this.fashionPage = this.pageManager.createFashionPage();
+  let browser: Browser;
 
-    } catch (error) {
-        console.error('Browser context initialization failed:', error);
-    }
-})
+  if (browserName === 'chromium') {
+    browser = await chromium.launch({ headless });
+  } else if (browserName === 'webkit') {
+    browser = await webkit.launch({ headless });
+  } else {
+    browser = await firefox.launch({ headless });
+  }
+
+  const context: BrowserContext = await browser.newContext({ viewport: { width: config.width, height: config.height }, ignoreHTTPSErrors: true, extraHTTPHeaders: { "Accept-Language": "id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7", }, });
+
+  const page: Page = await context.newPage();
+
+  // simpan ke world (AMAN PER WORKER)
+  this.browser = browser;
+  this.context = context;
+  this.page = page;
+
+  pageFixture.context = context;
+  pageFixture.page = page; // kalau masih dipakai Page Object
+});
+
 
 // After hook: Runs after each scenario
-After(async function({pickle, result}) {
-    if(result?.status === Status.FAILED){
-        if(pageFixture.page) {
-            // 🔥 1. FORCE scroll ke TOP page (agar screenshot tidak dibawah)
-        await pageFixture.page.evaluate(() => {
-            window.scrollTo(0, 0);
-        });
+After(async function ({ pickle, result }) {
+  if (result?.status === Status.FAILED && this.page) {
+    try {
+      // 🔝 Scroll ke atas biar screenshot rapi
+      await this.page.evaluate(() => window.scrollTo(0, 0));
+      await this.page.waitForTimeout(300);
 
-        // 🔥 2. Kasih sedikit delay biar render stabil
-        await pageFixture.page.waitForTimeout(300);
-            const screenshotPath = `./reports/screenshots/${pickle.name}-${Date.now()}.png`;
-            const image = await pageFixture.page.screenshot({ 
-                path: screenshotPath, 
-                type: 'png',
-                // timeout: 60000,
-                });
-                await this.attach(image, 'image/png');
-        } else {
-            console.log("pageFixture.page is undefined. Cannot capture screenshot.");
-        }
+      const screenshotPath = `./reports/screenshots/${pickle.name}-${Date.now()}.png`;
+      const image = await this.page.screenshot({
+        path: screenshotPath,
+        type: 'png',
+      });
+
+      await this.attach(image, 'image/png');
+    } catch (e) {
+      console.error('Failed to capture screenshot:', e);
     }
-    try { await pageFixture.page.close(); } catch {}
-    try { 
-        if (browserInstance) {
-            await pageFixture.page?.close();
-            await browserInstance.close();
-        }
-    } catch {}
-})
+  }
+
+  // 🔥 Tutup resource PER SCENARIO (AMAN)
+  try { await this.page?.close(); } catch {}
+  try { await this.context?.close(); } catch {}
+  try { await this.browser?.close(); } catch {}
+
+  pageFixture.page = undefined as any;
+  pageFixture.context = undefined as any;
+});

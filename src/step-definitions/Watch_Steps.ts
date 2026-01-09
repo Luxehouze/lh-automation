@@ -12,7 +12,7 @@ Given('user navigate to the Luxehouze watch page', async function (this: Cucumbe
   const baseUrl = process.env.BASE_URL.replace(/\/$/, "");
 
   await this.basePage.page.goto(`${baseUrl}/watch?noredirect=true`, {
-    waitUntil: "domcontentloaded"
+    waitUntil: "domcontentloaded", timeout: 15000,
   });
   console.log('DEBUG URL =', this.basePage.page.url());
 })

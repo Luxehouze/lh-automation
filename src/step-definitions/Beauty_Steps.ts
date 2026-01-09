@@ -10,10 +10,11 @@ Given('user navigate to the Luxehouze beauty page', async function (this: Cucumb
   }
 
   const baseUrl = process.env.BASE_URL.replace(/\/$/, "");
-
+  console.log("Navigating to:", `${baseUrl}/beauty?noredirect=true`);
   await this.basePage.page.goto(`${baseUrl}/beauty?noredirect=true`, {
-    waitUntil: "domcontentloaded"
+   waitUntil: "domcontentloaded", timeout: 15000,
   });
+  console.log("Navigation finished");
   console.log('DEBUG URL =', this.basePage.page.url());
 })
 
@@ -37,6 +38,7 @@ Then('user should verify price in product detail page of Charlotte Tilbury', asy
 When('user click category makeup in beauty page', async function (this: CucumberWorld) {
     await this.basePage.zoomOut();
     await pageFixture.page.waitForTimeout(3000);
+    await this.basePage.closeNewsletterPopupIfVisible();
     await this.beautyPage.clickMakeup();
 })
 

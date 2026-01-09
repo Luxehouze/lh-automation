@@ -5,9 +5,8 @@ export class HomePage extends BasePage {
 
     get thirdBannerBtn() { return this.page.getByRole('img', { name: 'Sell With Us' }); }
     get nextBannerBtn() { return this.page.getByRole('button', { name: /Next/i }); }
-    get searchInput() { return this.page.locator("#search-navbar"); }
+    get searchInput() { return this.page.locator('#search-navbar'); }
     get searchResult() { return this.page.locator('.black-10.semibold.subtitle-1.work-sans.svelte-1j3rafz'); }
-    get unlockMoreLuxefestBtn() { return this.page.getByRole('button', { name: 'UNLOCK MORE ON LUXEFEST' }); }
     get buyAWatchBtn() { return this.page.locator('span').filter({ hasText: 'BUY A WATCH' }).first(); }
     get sellAWatchBtn() { return this.page.locator('span').filter({ hasText: 'SELL A WATCH' }).first(); }
     get viewAllWatchesBtn()      { return this.page.getByRole('button', { name: 'VIEW ALL WATCHES' }).first(); }
@@ -38,6 +37,7 @@ export class HomePage extends BasePage {
     }
 
     public async enterSearchQuery(query: string): Promise<void> {
+        await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForTimeout(3000);
         await this.searchInput.click();
         await this.searchInput.fill(query);
@@ -45,36 +45,39 @@ export class HomePage extends BasePage {
         await this.page.waitForTimeout(2000); // Wait for suggestions to load
     }
 
-    public async verifySearchResult(): Promise<void> {
-        await this.page.waitForTimeout(2000);
-        await expect(this.searchResult).toContainText('Rolex');
-    }
+    public async verifySearchResult(keyword: string): Promise<void> {
+        await this.page.waitForLoadState('domcontentloaded');
+        await expect(this.page).toHaveURL(/\/search\?keyword=/, { timeout: 60_000 });
 
-    public async clickUnlockMoreOnLuxefest(): Promise<void> {
-        await this.unlockMoreLuxefestBtn.scrollIntoViewIfNeeded();
-        await this.unlockMoreLuxefestBtn.click();
-    }
+    // heading result (contoh: 1106 Results for "rolex")
+    const heading = this.page.getByText(new RegExp(`Results for\\s+"${keyword}"`, 'i'));
 
-    public async verifyLuxefestPage(): Promise<void> {
-        await expect(this.page).toHaveURL(/luxefest/);
+    await expect(heading).toBeVisible({ timeout: 60_000 });
+    await expect(heading).toContainText(new RegExp(keyword, 'i'), { timeout: 60_000 });
     }
 
     public async clickBuyAWatch(): Promise<void> {
+        await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForTimeout(2000);
         await this.buyAWatchBtn.click();
     }
 
     public async clickSellAWatch(): Promise<void> {
+        await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForTimeout(2000);
         await this.sellAWatchBtn.click();
     }
 
     public async verifyAllWatchesPage(): Promise<void> {
-        await expect(this.page).toHaveURL(/\/all-watches/);
+        await this.page.waitForLoadState('domcontentloaded');
+        await expect(this.page).toHaveURL(/\/all-watches/, { timeout: 25000 });
+        console.log("Current URL after click:", this.page.url());
     }
 
     public async verifySellWithUsPage(): Promise<void> {
-        await expect(this.page).toHaveURL(/\/sell-with-us/);
+        await this.page.waitForLoadState('domcontentloaded');
+        await expect(this.page).toHaveURL(/\/sell-with-us/, { timeout: 25000 });
+        console.log("Current URL after click:", this.page.url());
     }
 
     
