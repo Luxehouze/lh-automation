@@ -6,9 +6,9 @@ Background: Pre conditions
 
 @beauty-price @beauty-collection
 Scenario: Verify price in product detail page from beauty page
-    When user click Charlotte Tilbury in beauty page
-    And user select the first suggestion Charlotte Tilbury
-    Then user should verify price in product detail page of Charlotte Tilbury
+    When user click Rhode in beauty page
+    And user select the first suggestion Rhode
+    Then user should verify price in product detail page of Rhode
 
 @beauty-filter @beauty-label
 Scenario: Verify filter beauty

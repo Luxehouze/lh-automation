@@ -21,6 +21,8 @@ export class BasePage {
 
     get newsLetterPopup() { return this.page.getByText(/Never Miss An Update/i); }
     get closeNewsletterBtn() { return this.page.locator('[data-testid="newsletter-modal-close-button"]').nth(1); }
+    get CSATPopup() { return this.page.getByText("We'd love your"); }
+    get closeCSATBtn() { return this.page.locator('[data-test-id="csat-modal-no-thanks-button"]'); }
     get sortDropdown() { return this.page.getByText('Sort by'); }
     get sortHighToLow() { return this.page.getByText('Price: High to Low'); }
     get sortLowToHigh() { return this.page.getByText('Price: Low to High'); }
@@ -29,52 +31,105 @@ export class BasePage {
     get sortLatest() { return this.page.getByText('Latest'); }
 
     public async closeNewsletterPopupIfVisible(): Promise<void> {
-    if (this.page.url() === "about:blank") {
+    if (this.page.url() === "about:blank") return;
+
+    // Beri waktu popup muncul
+    await this.page.waitForTimeout(1500);
+
+    const titleLocator = this.newsLetterPopup;
+    const count = await titleLocator.count().catch(() => 0);
+    console.log("Newsletter title count =", count);
+
+    if (count === 0) {
+    console.log("Newsletter popup not present.");
     return;
-  }
+    }
 
-  // beri sedikit waktu popup muncul (tapi jangan sampai 30 detik)
-  await this.page.waitForTimeout(1500);
-
-  const titleLocator = this.newsLetterPopup;
-
-  // cek cepat: ada berapa elemen judul popup di DOM?
-  const count = await titleLocator.count().catch(() => 0);
-  console.log("Newsletter title count =", count);
-
-  if (count === 0) {
-    console.log("Newsletter popup is not present.");
-    return; // jangan pakai waitFor lagi, cukup keluar
-  }
-
-  // ambil elemen pertama dan cek visible
-  const title = titleLocator.first();
-  const visible = await title.isVisible().catch(() => false);
-
-  if (!visible) {
-    console.log("Newsletter popup element is in DOM but not visible.");
+    const title = titleLocator.first();
+    const visible = await title.isVisible().catch(() => false);
+    if (!visible) {
+    console.log("Popup newsletter in DOM but not visible.");
     return;
-  }
+    }
 
-  console.log("Newsletter popup is visible. Closing it...");
+    console.log("Popup newsletter visible. Trying to close...");
 
-  await this.page.waitForSelector('[data-testid="newsletter-modal-close-button"]', {
+    await this.page.waitForSelector('[data-testid="newsletter-modal-close-button"]', {
       state: 'attached',
-      timeout: 12000
+      timeout: 15000
     });
-  const closeBtn = this.closeNewsletterBtn;
 
-  if (await closeBtn.isVisible().catch((
-  ) => false)) {
+    const closeBtn = this.closeNewsletterBtn;
+    const closeVisible = await closeBtn.isVisible().catch(() => false);
+    console.log("Close button newsletter count =", await closeBtn.count());
+    console.log("Close button newsletter visible =", await closeBtn.isVisible().catch(() => false));
+
+
+  if (closeVisible) {
     await closeBtn.click({ force: true });
-    // optional: tunggu sedikit
     await this.page.waitForTimeout(500);
   } else {
-    console.log("Close button not found, trying Escape key...");
+    console.log("Close button not found, pressing Escape...");
     await this.page.keyboard.press("Escape");
     await this.page.waitForTimeout(500);
   }
+   try {
+    // jangan nunggu lama, cukup cek cepat
+    if (await closeBtn.count() === 0) return;
+
+    // kalau ada tapi belum visible, kasih waktu pendek
+    if (!(await closeBtn.first().isVisible().catch(() => false))) return;
+
+    await closeBtn.first().click({ timeout: 3000 }).catch(() => {});
+  } catch {
+    // swallow error biar gak bikin step timeout
+  }
 }
+
+    public async closeCSATPopupIfVisible(): Promise<void> {
+    if (this.page.url() === "about:blank") return;
+
+    // Beri waktu popup muncul
+    await this.page.waitForTimeout(1500);
+
+    const titleLocator = this.CSATPopup;
+    const count = await titleLocator.count().catch(() => 0);
+    console.log("CSAT title count =", count);
+
+    if (count === 0) {
+    console.log("CSAT popup not present.");
+    return;
+    }
+
+    const title = titleLocator.first();
+    const visible = await title.isVisible().catch(() => false);
+    if (!visible) {
+    console.log("Popup CSAT in DOM but not visible.");
+    return;
+    }
+
+    console.log("Popup CSAT visible. Trying to close...");
+
+    await this.page.waitForSelector('[data-test-id="csat-modal-no-thanks-button"]', {
+      state: 'attached',
+      timeout: 12000
+    });
+
+    const closeBtn = this.closeCSATBtn;
+    const closeVisible = await closeBtn.isVisible().catch(() => false);
+    console.log("Close button CSAT count =", await closeBtn.count());
+    console.log("Close button CSAT visible =", await closeBtn.isVisible().catch(() => false));
+    
+    if (closeVisible) {
+    await this.closeCSATBtn.click({ force: true });
+    } else {
+    console.log("Close button not found, pressing Escape...");
+    await this.page.keyboard.press("Escape");
+    }
+
+    await this.page.waitForTimeout(500);
+    }
+
 
     //Promise<void> in TypeScript when you’re defining an async function that doesn’t explicitly return a value.
     public async navigate(url: string): Promise<void> {

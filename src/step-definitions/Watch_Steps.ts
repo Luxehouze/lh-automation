@@ -21,6 +21,7 @@ When('user click patek phillippe in watch page', async function (this: CucumberW
     await this.basePage.zoomOut();
     await pageFixture.page.waitForTimeout(3000);
     await this.basePage.closeNewsletterPopupIfVisible();
+    await this.basePage.closeCSATPopupIfVisible();
     await this.watchPage.clickPatekPhillippe();
 })
 
@@ -37,6 +38,7 @@ Then('user should verify price in product detail page of Patek Phillippe', async
 When('user click Omega in watch page', async function (this: CucumberWorld) {
     await pageFixture.page.waitForTimeout(3000);
     await this.basePage.closeNewsletterPopupIfVisible();
+    await this.basePage.closeCSATPopupIfVisible();
     await this.watchPage.clickOmega();
 })
 

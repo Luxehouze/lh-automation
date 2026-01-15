@@ -38,15 +38,19 @@ export class HomePage extends BasePage {
 
     public async enterSearchQuery(query: string): Promise<void> {
         await this.page.waitForLoadState('domcontentloaded');
-        await this.page.waitForTimeout(3000);
+        await this.page.waitForTimeout(10000);
+        console.log(`Entering search query: ${query}`);
+        await expect(this.searchInput).toBeVisible();
+        console.log("Search input is visible.");
         await this.searchInput.click();
         await this.searchInput.fill(query);
+        console.log("Filled search input.");
         await this.searchInput.press("Enter");
         await this.page.waitForTimeout(2000); // Wait for suggestions to load
     }
 
     public async verifySearchResult(keyword: string): Promise<void> {
-        await this.page.waitForLoadState('domcontentloaded');
+        // await this.page.waitForLoadState('domcontentloaded');
         await expect(this.page).toHaveURL(/\/search\?keyword=/, { timeout: 60_000 });
 
     // heading result (contoh: 1106 Results for "rolex")
@@ -57,27 +61,35 @@ export class HomePage extends BasePage {
     }
 
     public async clickBuyAWatch(): Promise<void> {
-        await this.page.waitForLoadState('domcontentloaded');
-        await this.page.waitForTimeout(2000);
-        await this.buyAWatchBtn.click();
+    await this.page.waitForLoadState('domcontentloaded');
+    await expect(this.buyAWatchBtn).toBeVisible();
+    await expect(this.buyAWatchBtn).toBeEnabled();
+    console.log('DEBUG buy btn count =', await this.buyAWatchBtn.count());
+    console.log("Clicking Buy a Watch...");
+    await this.buyAWatchBtn.click({ trial: true, timeout: 15000 });
+    console.log("Clicked buy a watch. Current URL:", this.page.url());
     }
 
     public async clickSellAWatch(): Promise<void> {
-        await this.page.waitForLoadState('domcontentloaded');
-        await this.page.waitForTimeout(2000);
-        await this.sellAWatchBtn.click();
+    await this.page.waitForLoadState('domcontentloaded');
+    await expect(this.sellAWatchBtn).toBeVisible();
+    await expect(this.sellAWatchBtn).toBeEnabled();
+    console.log('DEBUG sell btn count =', await this.sellAWatchBtn.count());
+    console.log("Clicking Sell a Watch...");
+    await this.sellAWatchBtn.click({ trial: true, timeout: 15000 });
+    console.log("Clicked sell a watch. Current URL:", this.page.url());
     }
 
     public async verifyAllWatchesPage(): Promise<void> {
         await this.page.waitForLoadState('domcontentloaded');
         await expect(this.page).toHaveURL(/\/all-watches/, { timeout: 25000 });
-        console.log("Current URL after click:", this.page.url());
+        console.log("Current URL after click buy a watch:", this.page.url());
     }
 
     public async verifySellWithUsPage(): Promise<void> {
         await this.page.waitForLoadState('domcontentloaded');
         await expect(this.page).toHaveURL(/\/sell-with-us/, { timeout: 25000 });
-        console.log("Current URL after click:", this.page.url());
+        console.log("Current URL after click sell a watch:", this.page.url());
     }
 
     

@@ -10,12 +10,12 @@ export class FashionPage extends BasePage {
     // private listingPriceText?: string;
     // private detailPriceText?: string;
 
-    get clothesBtn() { return this.page.getByText('Clothes'); }
+    get clothesBtn() { return this.page.locator('span:has-text("Clothes")').first(); }
     get firstProductClothes()      { return this.page.getByText('Sweater Poodle Stripe Crewneck Multicolour').last(); }
     get firstProductpriceClothes() { return this.page.locator('.black-10.semibold.title-3.work-sans.svelte-1j3rafz') }
     get priceClothesPDP() { return this.page.locator('span.title-3', { hasText: 'Rp' }) }
-    get pradaBtn() { return this.page.locator("//div[3]//button[5]"); }
-    get filterBag()      { return this.page.locator('label:has-text("Bag")'); }
+    get pradaBtn() { return this.page.locator('//button[.//span[text()="Prada"]]'); }
+    get filterBag()      { return this.page.getByLabel('Bag'); }
     get filterColor()      { return this.page.getByLabel('Black'); }
     get filterWomen()      { return this.page.locator('span.black-6.regular.body-1.work-sans.pl-2',{ hasText: 'Women' }); }
     get resultFilterfashion()    { return this.page.locator('.product-card__header.relative').first(); }
@@ -86,6 +86,9 @@ export class FashionPage extends BasePage {
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForTimeout(3000);
         await this.pradaBtn.scrollIntoViewIfNeeded();
+        await expect(this.pradaBtn).toBeVisible({ timeout: 10000 });
+        console.log("Prada button count =", await this.pradaBtn.count());
+        console.log("Prada button visible =", await this.pradaBtn.isVisible().catch(() => false));
         await this.pradaBtn.click();
     }
 

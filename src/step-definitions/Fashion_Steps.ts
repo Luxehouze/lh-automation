@@ -21,7 +21,10 @@ Given('user navigate to the Luxehouze fashion page', async function (this: Cucum
 When('user click clothes in fashion page', async function (this: CucumberWorld) {
     await this.basePage.zoomOut();
     await pageFixture.page.waitForTimeout(3000);
+    await this.basePage.closeNewsletterPopupIfVisible();
+    console.log("STEP: popup closed, calling clickClothesCategory()");
     await this.fashionPage.clickClothes();
+    console.log("STEP: clickClothesCategory finished");
 })
 
 When('user select the first suggestion of clothes', async function (this: CucumberWorld) {
@@ -37,7 +40,6 @@ Then('user should verify price in product detail page of clothes', async functio
 
 When('user click Prada in fashion page', async function (this: CucumberWorld) {
     await this.basePage.zoomOut();
-    await pageFixture.page.waitForTimeout(3000);
     await this.basePage.closeNewsletterPopupIfVisible();
     await this.fashionPage.clickPrada();
 })

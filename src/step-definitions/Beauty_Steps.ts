@@ -18,26 +18,28 @@ Given('user navigate to the Luxehouze beauty page', async function (this: Cucumb
   console.log('DEBUG URL =', this.basePage.page.url());
 })
 
-When('user click Charlotte Tilbury in beauty page', async function (this: CucumberWorld) {
+When('user click Rhode in beauty page', async function (this: CucumberWorld) {
     await this.basePage.zoomOut();
     await pageFixture.page.waitForTimeout(8000);
-    await this.beautyPage.clickCharlotteTilbury();
+    await this.basePage.closeNewsletterPopupIfVisible();
+    console.log("STEP: popup newsletter closed, calling clickRhodeBrand()");
+    await this.beautyPage.clickRhode();
+    console.log("STEP: clickRhodeBrand finished");
 })
 
-When('user select the first suggestion Charlotte Tilbury', async function (this: CucumberWorld) {
+When('user select the first suggestion Rhode', async function (this: CucumberWorld) {
     await this.basePage.zoomOut();
     await this.basePage.closeNewsletterPopupIfVisible();
-    await this.beautyPage.selectFirstProductCT();
+    await this.beautyPage.selectFirstProductRhode();
 })
 
-Then('user should verify price in product detail page of Charlotte Tilbury', async function (this: CucumberWorld) {
+Then('user should verify price in product detail page of Rhode', async function (this: CucumberWorld) {
     await this.basePage.zoomOut();
-    await this.beautyPage.verifyCharlotteTilburyPrice();
+    await this.beautyPage.verifyRhodePrice();
 })
 
 When('user click category makeup in beauty page', async function (this: CucumberWorld) {
     await this.basePage.zoomOut();
-    await pageFixture.page.waitForTimeout(3000);
     await this.basePage.closeNewsletterPopupIfVisible();
     await this.beautyPage.clickMakeup();
 })

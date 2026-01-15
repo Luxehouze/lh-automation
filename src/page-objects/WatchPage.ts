@@ -23,8 +23,11 @@ export class WatchPage extends BasePage {
     get resultDial() { return this.page.getByText(/Blue/i);}
 
     public async clickPatekPhillippe(): Promise<void> {
+        await this.patekPhillippeLink.scrollIntoViewIfNeeded();
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForSelector('text=Patek Philippe', { timeout: 10000 });
+        console.log("debug patek pihillippe count=", await this.patekPhillippeLink.count())
+        console.log("patek phillippe link visibble=", await this.patekPhillippeLink.isVisible().catch(() => false))
         await this.patekPhillippeLink.click();
     }
 
