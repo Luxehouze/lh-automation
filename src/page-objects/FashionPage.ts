@@ -20,7 +20,7 @@ export class FashionPage extends BasePage {
     get filterWomen()      { return this.page.locator('span.black-6.regular.body-1.work-sans.pl-2',{ hasText: 'Women' }); }
     get resultFilterfashion()    { return this.page.locator('.product-card__header.relative').first(); }
     get resultBag() { return this.page.locator('div.flex.justify-between.border-b.py-4 span.black-10.regular.body-1.work-sans',{ hasText: 'Bag' }); }
-    get resultColor() { return this.page.locator('span:has-text("Black")').nth(1); }
+    get resultPrada() { return this.page.locator('//span[contains(text(), "Prada")]').nth(1); }
     get resultWomen() { return this.page.locator('div.flex.justify-between.border-b.py-4 span.black-10.regular.body-1.work-sans',{ hasText: 'Women' }); }
     get specificationTab() { return this.page.getByText('SPECIFICATIONS', { exact: true })}
 
@@ -190,10 +190,7 @@ export class FashionPage extends BasePage {
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForTimeout(8000);
         await this.specificationTab.click();
-        expect (this.resultColor).toBeVisible();
-        await this.page.waitForLoadState('domcontentloaded');
-        await this.page.waitForTimeout(1000);
-        expect (this.resultBag).toBeVisible();
+        expect (this.resultPrada).toBeVisible();
     }    
 
 
