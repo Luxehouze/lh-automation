@@ -4,6 +4,6 @@ import { setDefaultTimeout } from "@cucumber/cucumber";
 import { config as loadEnv } from "dotenv"
 const env = loadEnv({ path: './env/.env' });
 
-const customTimeout = parseInt(env.parsed?.CUCUMBER_CUSTOM_TIMEOUT || '60000');
-// 60 detik, silakan naikkan/kurangi sesuai kebutuhan
-setDefaultTimeout(60 * 1000);
+const customTimeout = parseInt(env.parsed?.CUCUMBER_CUSTOM_TIMEOUT || '80000');
+// 80 detik, silakan naikkan/kurangi sesuai kebutuhan
+setDefaultTimeout(80 * 1000);

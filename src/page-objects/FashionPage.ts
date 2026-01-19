@@ -25,15 +25,18 @@ export class FashionPage extends BasePage {
     get specificationTab() { return this.page.getByText('SPECIFICATIONS', { exact: true })}
 
     public async clickClothes(): Promise<void> {
-        console.log('DEBUG URL =', this.page.url());
-    await this.page.waitForLoadState('domcontentloaded');
+  console.log('DEBUG URL =', this.page.url());
+  await this.page.waitForLoadState('domcontentloaded');
 
-    const locator = this.clothesBtn;
+  // --- Guard: tutup newsletter popup/overlay dulu ---
+  await this.closeNewsletterPopupIfVisible();
 
-    const count = await locator.count();
-    console.log('DEBUG Clothes count =', count);
+  const locator = this.clothesBtn;
 
-    if (count === 0) {
+  const count = await locator.count();
+  console.log('DEBUG Clothes count =', count);
+
+  if (count === 0) {
     console.log('DEBUG taking screenshot for Clothes not found');
     await this.page.screenshot({
       path: 'debug-clothes-not-found.png',
@@ -42,8 +45,17 @@ export class FashionPage extends BasePage {
   }
 
   await locator.waitFor({ state: 'visible', timeout: 15000 });
+
+  // --- Just-in-time guard: cek lagi sebelum klik ---
+  await this.closeNewsletterPopupIfVisible();
+
+  // Pastikan overlay benar-benar detached
+  await this.page.waitForSelector('div[role="presentation"]', { state: 'detached', timeout: 2000 }).catch(() => {});
+
   await locator.click();
-    }
+  console.log("STEP: clickClothes finished");
+}
+
 
     public async selectFirstProductClothes(): Promise<void> {
         await this.page.waitForTimeout(3000);
@@ -81,17 +93,36 @@ export class FashionPage extends BasePage {
     }
 
     public async clickPrada(): Promise<void> {
-        const overlay = this.page.locator('div[role="presentation"]'); if (await overlay.isVisible().catch(() => false)) { console.log("Overlay detected, pressing Escape..."); await this.page.keyboard.press("Escape"); await this.page.waitForSelector('div[role="presentation"]', { state: 'detached', timeout: 5000 }); console.log("Overlay closed"); }
-        console.log('DEBUG Before Prada URL =', await this.page.url());
-        await this.page.screenshot({ path: 'debug-before-prada-click.png', fullPage: true });
-        await this.page.waitForLoadState('domcontentloaded');
-        await this.page.waitForTimeout(4000);
-        await this.pradaBtn.scrollIntoViewIfNeeded();
-        await expect(this.pradaBtn).toBeVisible({ timeout: 10000 });
-        console.log("Prada button count =", await this.pradaBtn.count());
-        console.log("Prada button visible =", await this.pradaBtn.isVisible().catch(() => false));
-        await this.pradaBtn.click();
-    }
+  console.log('DEBUG Before Prada URL =', await this.page.url());
+
+  // --- Guard: tutup newsletter popup/overlay dulu ---
+  await this.closeNewsletterPopupIfVisible();
+
+  // Screenshot kondisi sebelum klik
+  await this.page.screenshot({ path: 'debug-before-prada-click.png', fullPage: true });
+
+  // Pastikan halaman sudah siap
+  await this.page.waitForLoadState('domcontentloaded');
+  await this.page.waitForTimeout(4000);
+
+  // Scroll ke elemen target
+  await this.pradaBtn.scrollIntoViewIfNeeded();
+  await expect(this.pradaBtn).toBeVisible({ timeout: 10000 });
+
+  console.log("Prada button count =", await this.pradaBtn.count());
+  console.log("Prada button visible =", await this.pradaBtn.isVisible().catch(() => false));
+
+  // --- Just-in-time guard: cek lagi sebelum klik ---
+  await this.closeNewsletterPopupIfVisible();
+
+  // Pastikan overlay benar-benar detached
+  await this.page.waitForSelector('div[role="presentation"]', { state: 'detached', timeout: 2000 }).catch(() => {});
+
+  // Klik Prada
+  await this.pradaBtn.click();
+  console.log("STEP: clickPrada finished");
+}
+
 
     public async selectFilterfashion(): Promise<void> {
         console.log('DEBUG Before filter URL =', await this.page.url());

@@ -30,53 +30,57 @@ export class BasePage {
     get sortZtoA() { return this.page.getByText('Alphabetical, Z - A'); }
     get sortLatest() { return this.page.getByText('Latest'); }
 
-    public async closeNewsletterPopupIfVisible(): Promise<void> {
-    if (this.page.url() === "about:blank") return;
+    public async closeNewsletterPopupIfVisible(maxWaitMs = 12000, intervalMs = 1000): Promise<void> {
+  if (this.page.url() === "about:blank") return;
 
-    // Beri waktu popup muncul
-    await this.page.waitForTimeout(1500);
+  const titleLocator = this.newsLetterPopup;          // e.g. modal title/container
+  const closeBtn = this.closeNewsletterBtn;           // e.g. [data-testid="newsletter-modal-close-button"]
+  const overlay = this.page.locator('div[role="presentation"]'); // gray backdrop
 
-    const titleLocator = this.newsLetterPopup;
-    const count = await titleLocator.count().catch(() => 0);
-    console.log("Newsletter title count =", count);
+  const deadline = Date.now() + maxWaitMs;
 
-    if (count === 0) {
-    console.log("Newsletter popup not present.");
-    return;
+  while (Date.now() < deadline) {
+    const hasTitle = (await titleLocator.count().catch(() => 0)) > 0;
+    const titleVisible = hasTitle && await titleLocator.first().isVisible().catch(() => false);
+    const overlayVisible = await overlay.isVisible().catch(() => false);
+
+    console.log(`Blocking check: titleVisible=${titleVisible}, overlayVisible=${overlayVisible}`);
+
+    if (titleVisible || overlayVisible) {
+      // Try close button first
+      const closeVisible = await closeBtn.isVisible().catch(() => false);
+      if (closeVisible) {
+        await closeBtn.click().catch(async () => {
+          console.log("Close button click failed, pressing Escape...");
+          await this.page.keyboard.press("Escape");
+          console.log("sukses close newsletter with escape");
+        });
+      } else {
+        console.log("Close button not found/visible, pressing Escape...");
+        await this.page.keyboard.press("Escape");
+        console.log("sukses close newsletter with escape");
+      }
+
+      // Wait for overlay to truly detach
+      await this.page.waitForSelector('div[role="presentation"]', { state: 'detached', timeout: 3000 }).catch(() => {});
+      // Small settle
+      await this.page.waitForTimeout(300);
+      // Re-check quickly; if gone, we’re done
+      const stillVisible = await overlay.isVisible().catch(() => false) ||
+                           (await titleLocator.first().isVisible().catch(() => false));
+      if (!stillVisible) {
+        console.log("Blocking layers closed.");
+        return;
+      }
     }
 
-    const title = titleLocator.first();
-    const visible = await title.isVisible().catch(() => false);
-    if (!visible) {
-    console.log("Popup newsletter in DOM but not visible.");
-    return;
-    }
+    await this.page.waitForTimeout(intervalMs);
+  }
 
-    console.log("Popup newsletter visible. Trying to close...");
-
-    // await this.page.waitForSelector('[data-testid="newsletter-modal-close-button"]', {
-    //   state: 'attached',
-    //   timeout: 14000
-    // });
-
-    const closeBtn = this.closeNewsletterBtn;
-    const closeVisible = await closeBtn.isVisible().catch(() => false);
-    console.log("Close button newsletter count =", await closeBtn.count());
-    console.log("Close button newsletter visible =", await closeBtn.isVisible().catch(() => false));
-
-if (closeVisible) { 
-    await closeBtn.click().catch(() => { 
-        console.log("Close button click failed, pressing Escape instead..."); 
-        this.page.keyboard.press("Escape"); 
-        console.log("sukses close newsletter with escape");
-    }); 
-        await this.page.waitForTimeout(500); } 
-        else { 
-            console.log("Close button not found, pressing Escape..."); 
-        await this.page.keyboard.press("Escape"); 
-        console.log("sukses close newsletter with escape");
-        await this.page.waitForTimeout(500); }
+  console.log("No blocking layers detected within 12s, proceeding.");
 }
+
+
 
     public async closeCSATPopupIfVisible(): Promise<void> {
     if (this.page.url() === "about:blank") return;
