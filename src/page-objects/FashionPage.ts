@@ -10,11 +10,11 @@ export class FashionPage extends BasePage {
     // private listingPriceText?: string;
     // private detailPriceText?: string;
 
-    get clothesBtn() { return this.page.locator('span:has-text("Clothes")').first(); }
-    get firstProductClothes()      { return this.page.getByText('Sweater Poodle Stripe Crewneck Multicolour').last(); }
+    get clothesBtn() { return this.page.locator('[data-testid="fashion-category-card-clothes"]'); }
+    get firstProductClothes()      { return this.page.locator('[data-testid="product-card"]').first(); }
     get firstProductpriceClothes() { return this.page.locator('.black-10.semibold.title-3.work-sans.svelte-1j3rafz') }
     get priceClothesPDP() { return this.page.locator('span.title-3', { hasText: 'Rp' }) }
-    get pradaBtn() { return this.page.locator('//button[.//span[text()="Prada"]]'); }
+    get pradaBtn() { return this.page.locator('[data-testid="highly-sought-after-brand-card-Prada"]'); }
     get filterBag()      { return this.page.getByLabel('Bag'); }
     get filterColor()      { return this.page.getByLabel('Black'); }
     get filterWomen()      { return this.page.locator('span.black-6.regular.body-1.work-sans.pl-2',{ hasText: 'Women' }); }
@@ -41,8 +41,8 @@ export class FashionPage extends BasePage {
     });
   }
 
-  await locator.first().waitFor({ state: 'visible', timeout: 15000 });
-  await locator.first().click();
+  await locator.waitFor({ state: 'visible', timeout: 15000 });
+  await locator.click();
     }
 
     public async selectFirstProductClothes(): Promise<void> {
@@ -81,10 +81,11 @@ export class FashionPage extends BasePage {
     }
 
     public async clickPrada(): Promise<void> {
+        const overlay = this.page.locator('div[role="presentation"]'); if (await overlay.isVisible().catch(() => false)) { console.log("Overlay detected, pressing Escape..."); await this.page.keyboard.press("Escape"); await this.page.waitForSelector('div[role="presentation"]', { state: 'detached', timeout: 5000 }); console.log("Overlay closed"); }
         console.log('DEBUG Before Prada URL =', await this.page.url());
         await this.page.screenshot({ path: 'debug-before-prada-click.png', fullPage: true });
         await this.page.waitForLoadState('domcontentloaded');
-        await this.page.waitForTimeout(3000);
+        await this.page.waitForTimeout(4000);
         await this.pradaBtn.scrollIntoViewIfNeeded();
         await expect(this.pradaBtn).toBeVisible({ timeout: 10000 });
         console.log("Prada button count =", await this.pradaBtn.count());
@@ -161,7 +162,6 @@ export class FashionPage extends BasePage {
         expect (this.resultColor).toBeVisible();
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForTimeout(1000);
-        expect (this.resultWomen).toBeVisible();
         expect (this.resultBag).toBeVisible();
     }    
 

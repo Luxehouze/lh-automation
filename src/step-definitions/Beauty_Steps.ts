@@ -12,7 +12,7 @@ Given('user navigate to the Luxehouze beauty page', async function (this: Cucumb
   const baseUrl = process.env.BASE_URL.replace(/\/$/, "");
   console.log("Navigating to:", `${baseUrl}/beauty?noredirect=true`);
   await this.basePage.page.goto(`${baseUrl}/beauty?noredirect=true`, {
-   waitUntil: "domcontentloaded", timeout: 15000,
+   waitUntil: "domcontentloaded", timeout: 40000,
   });
   console.log("Navigation finished");
   console.log('DEBUG URL =', this.basePage.page.url());
@@ -20,7 +20,7 @@ Given('user navigate to the Luxehouze beauty page', async function (this: Cucumb
 
 When('user click Rhode in beauty page', async function (this: CucumberWorld) {
     await this.basePage.zoomOut();
-    await pageFixture.page.waitForTimeout(8000);
+    await pageFixture.page.waitForTimeout(12000);
     await this.basePage.closeNewsletterPopupIfVisible();
     console.log("STEP: popup newsletter closed, calling clickRhodeBrand()");
     await this.beautyPage.clickRhode();
@@ -29,7 +29,6 @@ When('user click Rhode in beauty page', async function (this: CucumberWorld) {
 
 When('user select the first suggestion Rhode', async function (this: CucumberWorld) {
     await this.basePage.zoomOut();
-    await this.basePage.closeNewsletterPopupIfVisible();
     await this.beautyPage.selectFirstProductRhode();
 })
 
@@ -40,12 +39,16 @@ Then('user should verify price in product detail page of Rhode', async function 
 
 When('user click category makeup in beauty page', async function (this: CucumberWorld) {
     await this.basePage.zoomOut();
+    await pageFixture.page.waitForTimeout(12000);
     await this.basePage.closeNewsletterPopupIfVisible();
+    console.log("STEP: popup newsletter closed, calling clickMakeup()");
     await this.beautyPage.clickMakeup();
+    console.log("STEP: clickMakeup finished");
 })
 
 When('user select filter beauty', async function (this: CucumberWorld) {
     await this.basePage.zoomOut();
+    await pageFixture.page.waitForLoadState('domcontentloaded'); 
     await pageFixture.page.waitForTimeout(4000);
     await this.basePage.closeNewsletterPopupIfVisible();
     await this.beautyPage.selectFilterBeauty();

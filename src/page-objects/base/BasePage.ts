@@ -54,36 +54,28 @@ export class BasePage {
 
     console.log("Popup newsletter visible. Trying to close...");
 
-    await this.page.waitForSelector('[data-testid="newsletter-modal-close-button"]', {
-      state: 'attached',
-      timeout: 15000
-    });
+    // await this.page.waitForSelector('[data-testid="newsletter-modal-close-button"]', {
+    //   state: 'attached',
+    //   timeout: 14000
+    // });
 
     const closeBtn = this.closeNewsletterBtn;
     const closeVisible = await closeBtn.isVisible().catch(() => false);
     console.log("Close button newsletter count =", await closeBtn.count());
     console.log("Close button newsletter visible =", await closeBtn.isVisible().catch(() => false));
 
-
-  if (closeVisible) {
-    await closeBtn.click({ force: true });
-    await this.page.waitForTimeout(500);
-  } else {
-    console.log("Close button not found, pressing Escape...");
-    await this.page.keyboard.press("Escape");
-    await this.page.waitForTimeout(500);
-  }
-   try {
-    // jangan nunggu lama, cukup cek cepat
-    if (await closeBtn.count() === 0) return;
-
-    // kalau ada tapi belum visible, kasih waktu pendek
-    if (!(await closeBtn.first().isVisible().catch(() => false))) return;
-
-    await closeBtn.first().click({ timeout: 3000 }).catch(() => {});
-  } catch {
-    // swallow error biar gak bikin step timeout
-  }
+if (closeVisible) { 
+    await closeBtn.click().catch(() => { 
+        console.log("Close button click failed, pressing Escape instead..."); 
+        this.page.keyboard.press("Escape"); 
+        console.log("sukses close newsletter with escape");
+    }); 
+        await this.page.waitForTimeout(500); } 
+        else { 
+            console.log("Close button not found, pressing Escape..."); 
+        await this.page.keyboard.press("Escape"); 
+        console.log("sukses close newsletter with escape");
+        await this.page.waitForTimeout(500); }
 }
 
     public async closeCSATPopupIfVisible(): Promise<void> {

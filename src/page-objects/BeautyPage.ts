@@ -5,15 +5,15 @@ import {expect, Page} from "@playwright/test";
 export class BeautyPage extends BasePage {
 
     get RhodeBtn() { return this.page.locator("//body/div/div/main/div/div/div/button[2]/img[1]"); }
-    get makeupBtn() { return this.page.locator('//button[.//span[contains(text(),"Makeup")]]'); }
-    get firstProductRhode() { return this.page.getByTitle('Peptide Lip Tint 10ml'); }
+    get makeupBtn() { return this.page.locator('[data-testid="luxebeauty-category-card-makeup"]'); }
+    get firstProductRhode() { return this.page.locator('[data-testid="product-card"]').first(); }
     get priceRhode() { return this.page.locator('.black-10.semibold.title-3.work-sans.svelte-1j3rafz') }
     get filterDior()      { return this.page.locator('label:has-text("Dior")'); }
     get filterHotRightNow()      { return this.page.getByLabel('Hot Right Now'); }
     get filterFace()      { return this.page.getByRole('checkbox', { name: 'Face', exact: true }); }
     get firstProductDior()      { return this.page.locator('.product-card__content.text-balance.z-10.relative').first(); }
     get resultDior() { return this.page.locator('//span/div/p'); }
-    get resultHotRightNow() { return this.page.locator('p:text("HOT RIGHT NOW")'); }
+    get resultHotRightNow() { return this.page.locator('p:text("HOT RIGHT NOW")').first(); }
     get resultRhode() { return this.page.locator('//h1[contains(text(), "Rhode")]'); }
     get resultLip() { return this.page.locator('//div[contains(text(), "Lip")]'); }
     
