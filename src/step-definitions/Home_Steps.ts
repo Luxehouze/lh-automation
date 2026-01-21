@@ -34,21 +34,27 @@ Then('user should see UTM parameters in the URL', async function (this: Cucumber
   console.log('Final URL:', this.homePage.page.url());
 })
 
-When('user enter "Rolex" in search bar', async function (this: CucumberWorld) {
+When('user enter {string} in search bar', async function (this: CucumberWorld, keyword: string) {
+    await pageFixture.page.waitForLoadState('domcontentloaded'); 
+    await pageFixture.page.waitForTimeout(4000);
     await this.basePage.closeNewsletterPopupIfVisible();
     await this.basePage.page.waitForTimeout(2000);
-    await this.basePage.closeCSATPopupIfVisible();
+    // await this.basePage.closeCSATPopupIfVisible();
+    await this.basePage.page.waitForSelector('div[role="presentation"]', { state: 'detached', timeout: 2000 }).catch(() => {});
     await this.homePage.enterSearchQuery("Rolex");
 })
 
-Then('user should verify search result contain "rolex"', async function (this: CucumberWorld, keyword: string) {
-    await this.basePage.closeNewsletterPopupIfVisible();
+Then('user should verify search result contain {string}', async function (this: CucumberWorld, keyword: string) {
+    // await this.basePage.closeNewsletterPopupIfVisible();
+    await pageFixture.page.waitForLoadState('domcontentloaded'); 
     await this.homePage.verifySearchResult(keyword);
 })
 
 When('user click {string}', async function (this: CucumberWorld, buttonName: string) {
+    await pageFixture.page.waitForLoadState('domcontentloaded'); 
+    await pageFixture.page.waitForTimeout(4000);
     await this.basePage.closeNewsletterPopupIfVisible();
-    await this.basePage.closeCSATPopupIfVisible();
+    // await this.basePage.closeCSATPopupIfVisible();
     if (buttonName === 'buy-a-watch') {
         await this.homePage.clickBuyAWatch();
         return;
@@ -60,6 +66,8 @@ When('user click {string}', async function (this: CucumberWorld, buttonName: str
 })
 
 Then('user should be redirected to {string}', async function (this: CucumberWorld, expectedPage: string) {
+    await pageFixture.page.waitForLoadState('domcontentloaded'); 
+    await pageFixture.page.waitForTimeout(4000);
     if (expectedPage === 'all-watches') {
         await this.homePage.verifyAllWatchesPage();
     } else {

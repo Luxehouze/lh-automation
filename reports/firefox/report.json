@@ -4,69 +4,56 @@
     "elements": [
       {
         "description": "",
-        "id": "luxehouze-fashion;verify-price-in-product-detail-page-from-fashion-page",
-        "keyword": "Scenario",
-        "line": 8,
-        "name": "Verify price in product detail page from fashion page",
+        "id": "luxehouze-home;verify-clicks-button-and-lands-on-correct-page",
+        "keyword": "Scenario Outline",
+        "line": 19,
+        "name": "Verify clicks button and lands on correct page",
         "steps": [
           {
             "keyword": "Before",
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 6196736084
+              "duration": 2530471958
             }
           },
           {
             "arguments": [],
             "keyword": "Given ",
             "line": 5,
-            "name": "user navigate to the Luxehouze fashion page",
+            "name": "user navigate to the Luxehouze home page",
             "match": {
-              "location": "src/step-definitions/Fashion_Steps.ts:7"
+              "location": "src/step-definitions/Home_Steps.ts:7"
             },
             "result": {
               "status": "passed",
-              "duration": 5558020874
+              "duration": 1646500375
             }
           },
           {
             "arguments": [],
             "keyword": "When ",
-            "line": 9,
-            "name": "user click clothes in fashion page",
+            "line": 14,
+            "name": "user click 'buy-a-watch'",
             "match": {
-              "location": "src/step-definitions/Fashion_Steps.ts:21"
+              "location": "src/step-definitions/Home_Steps.ts:53"
             },
             "result": {
               "status": "passed",
-              "duration": 61479809708
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "And ",
-            "line": 10,
-            "name": "user select the first suggestion of clothes",
-            "match": {
-              "location": "src/step-definitions/Fashion_Steps.ts:31"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 18287030333
+              "duration": 85515212250
             }
           },
           {
             "arguments": [],
             "keyword": "Then ",
-            "line": 11,
-            "name": "user should verify price in product detail page of clothes",
+            "line": 15,
+            "name": "user should be redirected to 'all-watches'",
             "match": {
-              "location": "src/step-definitions/Fashion_Steps.ts:37"
+              "location": "src/step-definitions/Home_Steps.ts:68"
             },
             "result": {
               "status": "passed",
-              "duration": 2678978583
+              "duration": 4035880582
             }
           },
           {
@@ -74,7 +61,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 794056749
+              "duration": 797109582
             }
           }
         ],
@@ -84,85 +71,68 @@
             "line": 1
           },
           {
-            "name": "@fashion",
+            "name": "@home",
             "line": 1
           },
           {
-            "name": "@fashion-price",
-            "line": 7
-          },
-          {
-            "name": "@fashion-collection",
-            "line": 7
+            "name": "@home-watch",
+            "line": 12
           }
         ],
         "type": "scenario"
       },
       {
         "description": "",
-        "id": "luxehouze-fashion;verify-filter-fashion",
-        "keyword": "Scenario",
-        "line": 14,
-        "name": "Verify filter fashion",
+        "id": "luxehouze-home;verify-clicks-button-and-lands-on-correct-page",
+        "keyword": "Scenario Outline",
+        "line": 20,
+        "name": "Verify clicks button and lands on correct page",
         "steps": [
           {
             "keyword": "Before",
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 6165155333
+              "duration": 2090156166
             }
           },
           {
             "arguments": [],
             "keyword": "Given ",
             "line": 5,
-            "name": "user navigate to the Luxehouze fashion page",
+            "name": "user navigate to the Luxehouze home page",
             "match": {
-              "location": "src/step-definitions/Fashion_Steps.ts:7"
+              "location": "src/step-definitions/Home_Steps.ts:7"
             },
             "result": {
               "status": "passed",
-              "duration": 3977048917
+              "duration": 1853083333
             }
           },
           {
             "arguments": [],
             "keyword": "When ",
-            "line": 15,
-            "name": "user click Prada in fashion page",
+            "line": 14,
+            "name": "user click 'sell-a-watch'",
             "match": {
-              "location": "src/step-definitions/Fashion_Steps.ts:42"
+              "location": "src/step-definitions/Home_Steps.ts:53"
             },
             "result": {
               "status": "passed",
-              "duration": 61210889417
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "And ",
-            "line": 16,
-            "name": "user select filter fashion",
-            "match": {
-              "location": "src/step-definitions/Fashion_Steps.ts:50"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 15401740625
+              "duration": 82795298165
             }
           },
           {
             "arguments": [],
             "keyword": "Then ",
-            "line": 17,
-            "name": "user should verify result filter fashion in product detail page of Prada",
+            "line": 15,
+            "name": "user should be redirected to 'sell-with-us'",
             "match": {
-              "location": "src/step-definitions/Fashion_Steps.ts:56"
+              "location": "src/step-definitions/Home_Steps.ts:68"
             },
             "result": {
               "status": "passed",
-              "duration": 10480649082
+              "duration": 4022021084
             }
           },
           {
@@ -170,7 +140,7 @@
             "hidden": true,
             "result": {
               "status": "passed",
-              "duration": 651849042
+              "duration": 763425042
             }
           }
         ],
@@ -180,35 +150,31 @@
             "line": 1
           },
           {
-            "name": "@fashion",
+            "name": "@home",
             "line": 1
           },
           {
-            "name": "@fashion-filter",
-            "line": 13
-          },
-          {
-            "name": "@fashion-label",
-            "line": 13
+            "name": "@home-watch",
+            "line": 12
           }
         ],
         "type": "scenario"
       }
     ],
-    "id": "luxehouze-fashion",
+    "id": "luxehouze-home",
     "line": 2,
     "keyword": "Feature",
-    "name": "Luxehouze Fashion",
+    "name": "Luxehouze Home",
     "tags": [
       {
         "name": "@regression",
         "line": 1
       },
       {
-        "name": "@fashion",
+        "name": "@home",
         "line": 1
       }
     ],
-    "uri": "src/features/Fashion.feature"
+    "uri": "src/features/Home.feature"
   }
 ]
